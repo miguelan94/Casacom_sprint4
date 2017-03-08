@@ -46,12 +46,21 @@ public class EventActivity extends BaseActivity implements View.OnClickListener 
         setContentView(R.layout.activity_event);
 
         progressDialog = ProgressDialog.show(this, getString(R.string.app_name), getString(R.string.please_wait), true);
-
+        String name_service = getIntent().getStringExtra("name_service");
         LinearLayout bgnd = (LinearLayout) findViewById(R.id.bar_bgnd);
+        TextView nameService_textView = (TextView)findViewById(R.id.name_service);
+        nameService_textView.setTextColor(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.fontColorTop);
+        if(name_service!=null && !name_service.equals("")){
+            nameService_textView.setText(name_service);
+        }
+        else{
+            nameService_textView.setVisibility(View.GONE);
+        }
         bgnd.setBackgroundColor(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.colorTop);
         ImageView bgnd_image = (ImageView) findViewById(R.id.event_bgnd_image);
         bgnd_image.setColorFilter(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.colorTop, PorterDuff.Mode.SRC_ATOP);
         ImageView leftArrow = (ImageView) findViewById(R.id.left_arrow_event);
+        leftArrow.setColorFilter(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.fontColorSmartphone);
         leftArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

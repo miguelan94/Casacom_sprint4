@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:id="@+id/background_table"
-    tools:context="com.streamnow.sentmatt.activities.EventActivity"
+    tools:context="com.streamnow.sentmattmobile.activities.EventActivity"
     tools:showIn="@layout/activity_event">
 
 

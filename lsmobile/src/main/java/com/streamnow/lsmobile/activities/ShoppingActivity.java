@@ -91,6 +91,7 @@ public class ShoppingActivity extends BaseActivity {
         background.setBackgroundColor(sessionUser.userInfo.partner.backgroundColorSmartphone);
         final TableLayout tableLayout = (TableLayout) findViewById(R.id.table);
         ImageView left_arrow = (ImageView) findViewById(R.id.left_arrow_shopping);
+        left_arrow.setColorFilter(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.fontColorSmartphone);
         left_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

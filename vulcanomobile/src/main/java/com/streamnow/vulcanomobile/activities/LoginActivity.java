@@ -341,6 +341,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                 if (sessionUser != null && sessionUser.accessToken != null) {
                     System.out.println("token: " + sessionUser.accessToken);
+                    System.out.println("User ID: " + sessionUser.userInfo.id);
                     Lindau.getInstance().setCurrentSessionUser(sessionUser);
                     if (switch_logged.isChecked()) {
                         prefEditor.putString("valid_until", sessionUser.validUntil);
@@ -361,8 +362,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     }
 
                     progressDialog.dismiss();
-                    //Intent i = new Intent(LoginActivity.this, RegistrationIntentService.class);
-                    //startService(i);
+                    Intent i = new Intent(LoginActivity.this, RegistrationIntentService.class);
+                    startService(i);
                     Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
                     startActivity(intent);
                     finish();

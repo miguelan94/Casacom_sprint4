@@ -29,6 +29,10 @@ public class LDPartner
     public int backgroundColorIconSmartphone;
     public int lineColorSmartphone;
     public String smartphoneAppName;
+    public String barButton;
+    public int barButtonColor;
+    public String barButtonText;
+    public String barButtonUrl;
 
     public LDPartner(JSONObject o)
     {
@@ -57,10 +61,23 @@ public class LDPartner
             if(!o.isNull("line_color_smartphone") && !o.getString("line_color_smartphone").equals(""))this.lineColorSmartphone = ld.colorFromRGBAString(o.getString("line_color_smartphone"));
             if(!o.isNull("background_smartphone_image")) this.backgroundSmartphoneImage = o.getString("background_smartphone_image");
             if(!o.isNull("smartphone_app_name")) this.smartphoneAppName = o.getString("smartphone_app_name");
+            if  (!o.isNull("bar_button"))
+                barButton = o.getString("bar_button");
+            buttonBar(o.getJSONObject("bar_button"));
 
         }
         catch (Exception e)
         {
+            e.printStackTrace();
+        }
+    }
+    private  void buttonBar (JSONObject o) {
+        Lindau ld = Lindau.getInstance();
+        try {
+            if (!o.isNull("color")) this.barButtonColor = ld.colorFromRGBAString(o.getString("color"));
+            if (!o.isNull("text")) this.barButtonText = o.getString("text");
+            if (!o.isNull("url")) this.barButtonUrl = o.getString("url");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

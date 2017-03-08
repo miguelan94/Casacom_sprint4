@@ -48,4 +48,6 @@
     <string name="no_entertainment_avaliable">This functionality does not work with Android 5.x</string>
     <string name="select_BP">Select</string>
     <string name="switch_loggued">Stay Logged</string>
+    <string name="call">Call</string>
+    <string name="call_abort">Cancel</string>
 </resources>

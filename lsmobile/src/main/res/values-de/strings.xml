@@ -51,4 +51,6 @@
     <string name="shopping_error">Es war nicht möglich, Ihren neuen Service zu aktivieren. Bitte versuchen Sie es später.</string>
     <string name="shopping_confirm">Sind Sie sicher um diesen Service zu kaufen?</string>
     <string name="buy">kaufen</string>
+    <string name="call">Anruf</string>
+    <string name="call_abort">Abbrechen</string>
 </resources>

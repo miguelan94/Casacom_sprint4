@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +19,7 @@ import android.os.Bundle;
 import android.support.customtabs.CustomTabsClient;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.customtabs.CustomTabsServiceConnection;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -86,6 +88,7 @@ public class MenuActivity extends BaseActivity
 
 
         categoryId = this.getIntent().getStringExtra("category_id");
+        String categoryName = getIntent().getStringExtra("category_name");
         ArrayList<? extends IMenuPrintable> adapterArray;
 
         if( categoryId == null )
@@ -112,9 +115,27 @@ public class MenuActivity extends BaseActivity
         RelativeLayout mainBackground = (RelativeLayout) findViewById(R.id.main_menu_background);
         //mainBackground.setBackgroundColor(sessionUser.userInfo.partner.colorTop);
         mainBackground.setBackgroundColor(sessionUser.userInfo.partner.backgroundColorSmartphone);
+        FloatingActionButton floating_button = (FloatingActionButton) findViewById(R.id.floating_button);
+        if(sessionUser.userInfo.partner.barButton!=null && !sessionUser.userInfo.partner.barButton.equals("")){
+            floating_button.setBackgroundTintList(ColorStateList.valueOf(sessionUser.userInfo.partner.barButtonColor));
+            floating_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MenuActivity.this, WebViewActivity.class);
+                    intent.putExtra("service_name",sessionUser.userInfo.partner.barButtonText);
+                    intent.putExtra("web_url", sessionUser.userInfo.partner.barButtonUrl);
+                    startActivity(intent);
+
+                }
+            });
+        }
+        else{
+            floating_button.setVisibility(View.GONE);
+        }
 
 
         TextView textView = (TextView)findViewById(R.id.text_app_name);
+        TextView categoryName_text = (TextView)findViewById(R.id.category_name);
         if(sessionUser.userInfo.partner.smartphoneAppName!=null && sessionUser.userInfo.partner.smartphoneAppName.isEmpty()){
             textView.setText(sessionUser.userInfo.partner.company);
         }
@@ -128,6 +149,7 @@ public class MenuActivity extends BaseActivity
         RelativeLayout bgnd_image = (RelativeLayout)findViewById(R.id.bgnd_image);
         ImageView smart_image = (ImageView)findViewById(R.id.smartphone_image);
         ImageView left_arrow = (ImageView)findViewById(R.id.left_arrow);
+        left_arrow.setColorFilter(sessionUser.userInfo.partner.fontColorSmartphone);
         left_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,7 +160,7 @@ public class MenuActivity extends BaseActivity
         ImageView imageView = (ImageView)findViewById(R.id.settings_ico); //settings
         if(!getIntent().getBooleanExtra("sub_menu",false)){
             //smart_image.setImageResource(sessionUser.userInfo.partner.backgroundSmartphoneImage);
-
+            categoryName_text.setVisibility(View.GONE);
             System.out.println("Image: " + sessionUser.userInfo.partner.backgroundSmartphoneImage);
             dividerTop.setVisibility(View.GONE);
             Picasso.with(this)
@@ -159,10 +181,16 @@ public class MenuActivity extends BaseActivity
             dividerTop.setBackgroundColor(sessionUser.userInfo.partner.lineColorSmartphone);
             dividerTop.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.GONE);
+            if(categoryName!=null && !categoryName.equals("")){
+                categoryName_text.setVisibility(View.VISIBLE);
+                categoryName_text.setTextColor(sessionUser.userInfo.partner.fontColorTop);
+                categoryName_text.setText(categoryName);
+            }
             textView.setVisibility(View.GONE);
             smart_image.setVisibility(View.GONE);
             //bgnd_image.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT));
             left_arrow.setVisibility(View.VISIBLE);
+            floating_button.setVisibility(View.GONE);
             //bgnd_image.setVisibility(View.GONE);
             //mainBackground.setPadding(0,(int)getResources().getDimension(R.dimen.activity_vertical_margin),0,0);
         }
@@ -190,10 +218,222 @@ public class MenuActivity extends BaseActivity
 
         if( getIntent().getBooleanExtra("sub_menu", false) ) //si true
         {
-
             services = sessionUser.getAvailableServicesForCategoryId(categoryId);
             final LDService service = (LDService) services.get(position);
             System.out.println("service clicked: " + service.id + " type: " + service.type + " category: " + categoryId);
+
+            switch (service.type) {
+                case "2": {
+                    if (categoryId.equals("5")) {
+                        System.out.println("AppID: " + service.secretId + " user: " + getIntent().getStringExtra("user_vodka") + " pass: " + getIntent().getStringExtra("pass_vodka"));
+                        RequestParams requestParams = new RequestParams();
+                        requestParams.add("appId", service.secretId);
+                        requestParams.add("userId", getIntent().getStringExtra("user_vodka"));
+                        requestParams.add("password", getIntent().getStringExtra("pass_vodka"));
+                        //https://project-test.streamnow.ch/web/#/tv/livingServices?
+                        System.out.println("api_url: " + service.apiUrl);
+                        System.out.println("web_url: " + service.webviewUrl);
+                        System.out.println("service_id: " + service.id);
+                        AsyncHttpClient httpClient = new AsyncHttpClient();
+                        httpClient.setUserAgent("Mozilla/5.0 (Linux; Android 4.4; Nexus 5 Build/_BuildID_) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36");
+                        httpClient.setEnableRedirects(true);
+                   /* KeyStore trustStore = null;
+                    MySSLSocketFactory socketFactory = null;
+                    try {
+                        trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+                        trustStore.load(null, null);
+                        socketFactory = new MySSLSocketFactory(trustStore);
+                        socketFactory.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    httpClient.setSSLSocketFactory(socketFactory);
+                    */
+                        httpClient.setSSLSocketFactory(MySSLSocketFactory.getFixedSocketFactory());
+                        httpClient.post(service.apiUrl, requestParams, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                try {
+                                    System.out.println("response: " + response.toString());
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(service.webviewUrl + "token=" + response.getString("token")));
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.setPackage("com.android.chrome");
+                                        try {
+                                            startActivity(intent);
+                                        } catch (ActivityNotFoundException e) {
+                                            // Chrome is probably not installed
+                                            intent.setPackage(null);
+                                            startActivity(intent);
+                                        }
+                                    } else {
+                                        Intent intent = new Intent(MenuActivity.this, WebViewActivity.class);
+                                        intent.putExtra("web_url", service.webviewUrl);
+                                        intent.putExtra("service_id", service.id);
+                                        intent.putExtra("token", response.getString("token"));
+                                        intent.putExtra("service_name", service.name);
+                                        startActivity(intent);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                System.out.println("onFailure json" + errorResponse.toString());
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                                System.out.println("onFailure array");
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
+                                System.out.println("get token KO: " + throwable.toString() + " status code = " + statusCode + " responseString = " + response);
+                            }
+                        });
+                        break;
+                    } else {
+                        final Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", service.webviewUrl);
+                        intent.putExtra("service_id", service.id);
+                        intent.putExtra("service_name", service.name);
+                        startActivity(intent);
+                        break;
+                    }
+
+                }
+                case "3": {
+                    // TODO Open youtube video here
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("service_name", service.name);
+                    intent.putExtra("web_url", "https://m.youtube.com/watch?v=" + service.webviewUrl);
+                    startActivity(intent);
+                    break;
+                }
+                case "1": {
+
+
+                        /*if (service.id.equals("22")) {//events
+                            Intent i = new Intent(this, EventActivity.class);
+                            startActivity(i);
+                        } else if (service.id.equals("53") || service.id.equals("20")) {
+                            Intent intent = new Intent(this, ContactActivity.class);
+                            intent.putExtra("api_url", service.apiUrl);
+                            startActivity(intent);
+                        } else if (service.id.equals("3")) {
+                            Intent intent = new Intent(this, DocmanMenuActivity.class);
+                            intent.putExtra("root_menu", true);
+                            intent.putExtras(new Bundle());
+                            startActivity(intent);
+                        }*/
+                    break;
+                }
+                case "8": {
+                    Intent intent = getPackageManager().getLaunchIntentForPackage(service.webviewUrl);
+                    if (intent != null) {
+                        startActivity(intent);
+                    } else {
+                        try {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + service.webviewUrl)));
+                        } catch (ActivityNotFoundException e) {
+                            e.printStackTrace();
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + service.webviewUrl)));
+                        }
+
+                    }
+                    break;
+                }
+                case "9": {
+                    Intent intent = new Intent(this, ContactActivity.class);
+                    intent.putExtra("name_service", service.name);
+                    intent.putExtra("api_url", service.apiUrl);
+                    startActivity(intent);
+                    break;
+                }
+                case "10": {
+                    Intent intent = new Intent(this, DocmanMenuActivity.class);
+                    intent.putExtra("name_service", service.name);
+                    intent.putExtra("root_menu", true);
+                    intent.putExtras(new Bundle());
+                    startActivity(intent);
+                    break;
+                }
+                case "11": {
+                    Intent i = new Intent(this, EventActivity.class);
+                    i.putExtra("name_service", service.name);
+                    startActivity(i);
+                    break;
+                }
+                case "12": {
+                    RequestParams requestParams = new RequestParams();
+                    requestParams.add("appId", service.secretId);
+                    requestParams.add("userId", getIntent().getStringExtra("user_vodka"));
+                    requestParams.add("password", getIntent().getStringExtra("pass_vodka"));
+                    System.out.println("web_url: " + service.webviewUrl);
+                    System.out.println("service_id: " + service.id);
+                    AsyncHttpClient httpClient = new AsyncHttpClient();
+                    httpClient.setUserAgent("Mozilla/5.0 (Linux; Android 4.4; Nexus 5 Build/_BuildID_) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36");
+                    httpClient.setEnableRedirects(true);
+                    httpClient.setSSLSocketFactory(MySSLSocketFactory.getFixedSocketFactory());
+                    httpClient.post(service.apiUrl, requestParams, new JsonHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            try {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(service.webviewUrl + "token=" + response.getString("token")));
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.setPackage("com.android.chrome");
+                                    try {
+                                        startActivity(intent);
+                                    } catch (ActivityNotFoundException e) {
+                                        // Chrome is probably not installed
+                                        intent.setPackage(null);
+                                        startActivity(intent);
+                                    }
+                                } else {
+                                    Intent intent = new Intent(MenuActivity.this, WebViewActivity.class);
+                                    intent.putExtra("web_url", service.webviewUrl);
+                                    intent.putExtra("service_id", service.id);
+                                    intent.putExtra("token", response.getString("token"));
+                                    intent.putExtra("service_name", service.name);
+                                    startActivity(intent);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            System.out.println("onFailure json" + errorResponse.toString());
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                            System.out.println("onFailure array");
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
+                            System.out.println("get token KO: " + throwable.toString() + " status code = " + statusCode + " responseString = " + response);
+                        }
+                    });
+                }
+
+
+            }
+
+
+
+
+
+
+
+
+            /*
             if (service.type.equals("2"))
             {
                 final Intent intent = new Intent(this, WebViewActivity.class);
@@ -232,63 +472,6 @@ public class MenuActivity extends BaseActivity
                         {
                             try {
                                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-
-                                    /*CustomTabsServiceConnection mCustomTabsServiceConnection = new CustomTabsServiceConnection() {
-                                        @Override
-                                        public void onCustomTabsServiceConnected(ComponentName componentName, CustomTabsClient customTabsClient) {
-                                           mCustomTabsClient = customTabsClient;
-                                            mCustomTabsClient.warmup(0L);
-                                        }
-
-                                        @Override
-                                        public void onServiceDisconnected(ComponentName name) {
-                                            mCustomTabsClient = null;
-                                        }
-                                    };*/
-
-/*
-                                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
-                                            R.drawable.left_arrow);
-                                int height_dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 22, getResources().getDisplayMetrics());
-                                int width_dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics());
-                                    Bitmap ic = Bitmap.createScaledBitmap(icon,width_dp,height_dp,false);
-                                System.out.println("width: " + icon.getWidth() + " height: " + icon.getHeight());
-                                System.out.println("new width: " + ic.getWidth() + " new heihgt: " + ic.getHeight());
-                                    Intent i = new Intent(MenuActivity.this,MenuActivity.class);
-                                    PendingIntent pendingIntent = PendingIntent.getActivity(MenuActivity.this,0,i,0);
-
-                                    CustomTabsClient.bindCustomTabsService(MenuActivity.this, "com.android.chrome",new CustomTabsServiceConnection() {
-                                        @Override
-                                        public void onCustomTabsServiceConnected(ComponentName componentName, CustomTabsClient customTabsClient) {
-                                            mCustomTabsClient = customTabsClient;
-                                            mCustomTabsClient.warmup(0);
-
-                                        }
-
-                                        @Override
-                                        public void onServiceDisconnected(ComponentName name) {
-                                            mCustomTabsClient = null;
-                                        }
-                                    });
-
-                                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                                   // builder.setCloseButtonIcon(icon);
-                                    //builder.enableUrlBarHiding();
-                                    //builder.setActionButton(ic,"back",pendingIntent);
-                                   // builder.addDefaultShareMenuItem().setCloseButtonIcon(ic);
-
-                                    builder.setToolbarColor(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.colorTop);
-
-                                   // builder.setExitAnimations(MenuActivity.this, android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-                                    //builder.enableUrlBarHiding ();
-                                    CustomTabsIntent customTabsIntent = builder.build();
-                                    customTabsIntent.launchUrl(MenuActivity.this, Uri.parse(service.apiUrl+"token="+response.getString("token")));
-
-
-                                //response.getString("token");
-*/
-
-
                                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(service.webviewUrl+"token="+response.getString("token")));
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     intent.setPackage("com.android.chrome");
@@ -300,9 +483,6 @@ public class MenuActivity extends BaseActivity
                                         startActivity(intent);
                                     }
 
-
-                                   // intent.putExtra("token",response.getString("token") );
-                                    //startActivity(intent);
 
                                 }
                                 else{
@@ -370,7 +550,7 @@ public class MenuActivity extends BaseActivity
                 }else{
 
                 }
-            }
+            }*/
         }
         else
         {
@@ -383,7 +563,78 @@ public class MenuActivity extends BaseActivity
 
                 LDService service = (LDService) services.get(0);
                     //check service type
-                if (service.type.equals("1"))
+
+                switch (service.type) {
+                    case "1":
+                            /*if (service.id.equals("53") || service.id.equals("20")) {
+                                Intent intent = new Intent(this, ContactActivity.class);
+                                intent.putExtra("api_url", service.apiUrl);
+                                startActivity(intent);
+                            } else {
+                                Intent intent = new Intent(this, DocmanMenuActivity.class);
+                                intent.putExtra("root_menu", true);
+                                intent.putExtras(new Bundle());
+                                startActivity(intent);
+                            }*/
+                        break;
+                    case "2": {
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", service.webviewUrl);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        break;
+                    }
+                    case "3": {
+                        // TODO Open youtube video here
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", "https://m.youtube.com/watch?v=" + service.webviewUrl);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        break;
+                    }
+                    case "8": {
+                        Intent intent = getPackageManager().getLaunchIntentForPackage(service.webviewUrl);
+                        if (intent != null) {
+                            startActivity(intent);
+                        } else {
+                            try {
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + service.webviewUrl)));
+                            } catch (ActivityNotFoundException e) {
+                                e.printStackTrace();
+                                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + service.webviewUrl)));
+                            }
+                        }
+                        break;
+                    }
+                    case  "9": {
+                        Intent intent = new Intent(this, ContactActivity.class);
+                        intent.putExtra("name_service",service.name);
+                        intent.putExtra("api_url", service.apiUrl);
+                        startActivity(intent);
+                        break;
+                    }
+                    case  "10": {
+                        Intent intent = new Intent(this, DocmanMenuActivity.class);
+                        intent.putExtra("name_service",service.name);
+                        intent.putExtra("root_menu", true);
+                        intent.putExtras(new Bundle());
+                        startActivity(intent);
+                        break;
+                    }
+                    case "11": {
+                        Intent i = new Intent(this, EventActivity.class);
+                        i.putExtra("name_service",service.name);
+                        startActivity(i);
+                        break;
+                    }
+                }
+
+
+
+
+
+
+                /*if (service.type.equals("1"))
                 {
                     if( service.id.equals("53") )
                     {
@@ -420,12 +671,13 @@ public class MenuActivity extends BaseActivity
                     }else{
 
                     }
-                }
+                }*/
             }
             else if (services.size() > 1)
             {
                 final Intent intent = new Intent(this, MenuActivity.class);
                 intent.putExtra("category_id", sessionUser.categories.get(position).id);
+                intent.putExtra("category_name" , sessionUser.categories.get(position).name);
                 intent.putExtra("sub_menu", true);
                 if(sessionUser.categories.get(position).id.equals("5") || sessionUser.categories.get(position).id.equals("92")){//entertainment
                     //if(Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP || Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1){ //API 21-22

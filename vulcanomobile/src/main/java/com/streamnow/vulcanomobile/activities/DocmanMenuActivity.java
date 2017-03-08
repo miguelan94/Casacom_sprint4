@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.streamnow.vulcanomobile.datamodel.DMCategory;
 import com.streamnow.vulcanomobile.datamodel.DMDocument;
@@ -55,15 +56,26 @@ public class DocmanMenuActivity extends BaseActivity {
         config.locale = locale;
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
         setContentView(R.layout.activity_docman_menu);
+        String name_service = getIntent().getStringExtra("name_service");
+
         RelativeLayout mainBackground = (RelativeLayout) findViewById(R.id.main_background);
         mainBackground.setBackgroundColor(sessionUser.userInfo.partner.backgroundColorSmartphone);
         ImageView leftArrow = (ImageView) findViewById(R.id.left_arrow_doc);
+        leftArrow.setColorFilter(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.fontColorSmartphone);
         leftArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+        TextView nameService_textView = (TextView)findViewById(R.id.name_service);
+        nameService_textView.setTextColor(sessionUser.userInfo.partner.fontColorTop);
+        if(name_service!=null && !name_service.equals("")){
+            nameService_textView.setText(name_service);
+        }
+        else{
+            nameService_textView.setVisibility(View.GONE);
+        }
         dividerTop = findViewById(R.id.divider);
         this.isRootMenu = getIntent().getBooleanExtra("root_menu", false);
 
@@ -106,6 +118,7 @@ public class DocmanMenuActivity extends BaseActivity {
 
         if (element.elementType == DMElement.DMElementType.DMElementTypeCategory) {
             DMCategory category = (DMCategory) element;
+            System.out.println("category: " + category.id);
             Intent intent = new Intent(this, DocmanMenuActivity.class);
 
             if (this.isRootMenu) {
@@ -120,7 +133,6 @@ public class DocmanMenuActivity extends BaseActivity {
 
             startActivity(intent);
         } else if (element.elementType == DMElement.DMElementType.DMElementTypeDocument) {
-            System.out.println("webview document");
             // TODO Open webview with document shown inside (call WebViewActiviy with some url)
             DMDocument document = (DMDocument) element;
             Intent intent = new Intent(this, WebViewActivity.class);
@@ -154,10 +166,11 @@ public class DocmanMenuActivity extends BaseActivity {
         @Override
         public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
             try {
+                System.out.println("Response--> " + response.toString());
                 if (response.getString("status").equals("ok")) {
                     ArrayList<IMenuPrintable> userTreeArray = new ArrayList<>();
                     userTreeArray.addAll(DMCategory.categoriesWithArray(response.getJSONArray("usertree")));
-
+                    System.out.println("usertree----> " + response.getString("usertree"));
                     ArrayList<IMenuPrintable> repoTreeArray = new ArrayList<>();
                     repoTreeArray.addAll(DMCategory.categoriesWithArray(response.getJSONArray("repotree")));
 
@@ -199,7 +212,6 @@ public class DocmanMenuActivity extends BaseActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                showAlertDialog(getString(R.string.network_error));
             }
             progressDialog.dismiss();
         }

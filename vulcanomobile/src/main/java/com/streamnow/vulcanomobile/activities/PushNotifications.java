@@ -34,9 +34,9 @@ public class PushNotifications extends GcmListenerService {
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("Notification")
                         .setContentText(message);
-        Intent resultIntent = new Intent(this, MenuActivity.class);
+        Intent resultIntent = new Intent(this, MainActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MenuActivity.class);
+        stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(

@@ -78,6 +78,7 @@ public class MenuActivity extends BaseActivity {
 
 
         categoryId = this.getIntent().getStringExtra("category_id");
+        String categoryName = getIntent().getStringExtra("category_name");
         ArrayList<? extends IMenuPrintable> adapterArray;
 
         if (categoryId == null) {
@@ -92,6 +93,7 @@ public class MenuActivity extends BaseActivity {
 
 
         TextView textView = (TextView) findViewById(R.id.text_app_name);
+        TextView categoryName_text = (TextView)findViewById(R.id.category_name);
         if (sessionUser.userInfo.partner.smartphoneAppName != null && sessionUser.userInfo.partner.smartphoneAppName.isEmpty()) {
             textView.setText(sessionUser.userInfo.partner.company);
         } else {
@@ -100,6 +102,7 @@ public class MenuActivity extends BaseActivity {
 
         ImageView smart_image = (ImageView) findViewById(R.id.smartphone_image);
         ImageView left_arrow = (ImageView) findViewById(R.id.left_arrow);
+        left_arrow.setColorFilter(sessionUser.userInfo.partner.fontColorSmartphone);
         left_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +112,7 @@ public class MenuActivity extends BaseActivity {
         View dividerTop = findViewById(R.id.divider);
         ImageView imageView = (ImageView) findViewById(R.id.settings_ico); //settings
         if (!getIntent().getBooleanExtra("sub_menu", false)) {
-
+            categoryName_text.setVisibility(View.GONE);
             System.out.println("Image: " + sessionUser.userInfo.partner.backgroundSmartphoneImage);
             dividerTop.setVisibility(View.GONE);
             Picasso.with(this)
@@ -129,6 +132,11 @@ public class MenuActivity extends BaseActivity {
             dividerTop.setBackgroundColor(sessionUser.userInfo.partner.lineColorSmartphone);
             dividerTop.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.GONE);
+            if(categoryName!=null && !categoryName.equals("")){
+                categoryName_text.setVisibility(View.VISIBLE);
+                categoryName_text.setTextColor(sessionUser.userInfo.partner.fontColorTop);
+                categoryName_text.setText(categoryName);
+            }
             textView.setVisibility(View.GONE);
             smart_image.setVisibility(View.GONE);
             left_arrow.setVisibility(View.VISIBLE);
@@ -158,15 +166,17 @@ public class MenuActivity extends BaseActivity {
             final LDService service = (LDService) services.get(position);
             switch (service.type) {
                 case "2": {
-                    final Intent intent = new Intent(this, WebViewActivity.class);
+                    Intent intent = new Intent(this, WebViewActivity.class);
                     intent.putExtra("web_url", service.webviewUrl);
                     intent.putExtra("service_id", service.id);
+                    intent.putExtra("service_name",service.name);
                     startActivity(intent);
                     break;
                 }
                 case "3": {
                     // TODO Open youtube video here
                     Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("service_name",service.name);
                     intent.putExtra("web_url", "https://m.youtube.com/watch?v=" + service.webviewUrl);
                     startActivity(intent);
                     break;
@@ -207,18 +217,21 @@ public class MenuActivity extends BaseActivity {
                 case "9": {
                     Intent intent = new Intent(this, ContactActivity.class);
                     intent.putExtra("api_url", service.apiUrl);
+                    intent.putExtra("name_service",service.name);
                     startActivity(intent);
                     break;
                 }
                 case "10": {
                     Intent intent = new Intent(this, DocmanMenuActivity.class);
                     intent.putExtra("root_menu", true);
+                    intent.putExtra("name_service",service.name);
                     intent.putExtras(new Bundle());
                     startActivity(intent);
                     break;
                 }
                 case "11": {
                     Intent i = new Intent(this, EventActivity.class);
+                    i.putExtra("name_service",service.name);
                     startActivity(i);
                     break;
                 }
@@ -263,6 +276,7 @@ public class MenuActivity extends BaseActivity {
                                     intent.putExtra("web_url", service.webviewUrl);
                                     intent.putExtra("service_id", service.id);
                                     intent.putExtra("token", response.getString("token"));
+                                    intent.putExtra("service_name",service.name);
                                     startActivity(intent);
                                 }
                             } catch (JSONException e) {
@@ -312,6 +326,7 @@ public class MenuActivity extends BaseActivity {
                     case "2": {
                         Intent intent = new Intent(this, WebViewActivity.class);
                         intent.putExtra("web_url", service.webviewUrl);
+                        intent.putExtra("service_name",service.name);
                         startActivity(intent);
                         break;
                     }
@@ -319,6 +334,7 @@ public class MenuActivity extends BaseActivity {
                         // TODO Open youtube video here
                         Intent intent = new Intent(this, WebViewActivity.class);
                         intent.putExtra("web_url", "https://m.youtube.com/watch?v=" + service.webviewUrl);
+                        intent.putExtra("service_name",service.name);
                         startActivity(intent);
                         break;
                     }
@@ -338,12 +354,14 @@ public class MenuActivity extends BaseActivity {
                     }
                     case  "9": {
                         Intent intent = new Intent(this, ContactActivity.class);
+                        intent.putExtra("name_service",service.name);
                         intent.putExtra("api_url", service.apiUrl);
                         startActivity(intent);
                         break;
                     }
                     case  "10": {
                         Intent intent = new Intent(this, DocmanMenuActivity.class);
+                        intent.putExtra("name_service",service.name);
                         intent.putExtra("root_menu", true);
                         intent.putExtras(new Bundle());
                         startActivity(intent);
@@ -351,6 +369,7 @@ public class MenuActivity extends BaseActivity {
                     }
                     case "11": {
                         Intent i = new Intent(this, EventActivity.class);
+                        i.putExtra("name_service",service.name);
                         startActivity(i);
                         break;
                     }
@@ -358,6 +377,7 @@ public class MenuActivity extends BaseActivity {
             } else if (services.size() > 1) {
                 final Intent intent = new Intent(this, MenuActivity.class);
                 intent.putExtra("category_id", sessionUser.categories.get(position).id);
+                intent.putExtra("category_name" , sessionUser.categories.get(position).name);
                 intent.putExtra("sub_menu", true);
                 if (sessionUser.categories.get(position).id.equals("5")) {//entertainment
                     final RequestParams requestParams = new RequestParams("access_token", sessionUser.accessToken);

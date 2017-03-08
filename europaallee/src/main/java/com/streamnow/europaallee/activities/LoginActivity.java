@@ -399,6 +399,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener
                 if( sessionUser != null && sessionUser.accessToken != null )
                 {
                     System.out.println("token: " + sessionUser.accessToken);
+                    System.out.println("User ID: " + sessionUser.userInfo.id);
                     Lindau.getInstance().setCurrentSessionUser(sessionUser);
                     Locale locale = new Locale(Lindau.getInstance().getCurrentSessionUser().userInfo.language);
                     //Locale.setDefault(locale);
@@ -425,8 +426,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener
                     }
 
                     progressDialog.dismiss();
-                    //Intent i = new Intent (LoginActivity.this,RegistrationIntentService.class);
-                    //startService(i);
+                    Intent i = new Intent (LoginActivity.this,RegistrationIntentService.class);
+                    startService(i);
                     Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
                     startActivity(intent);
                     finish();

@@ -88,6 +88,7 @@ public class SettingsActivity extends BaseActivity {
             }
         });
         ImageView left_arrow = (ImageView) findViewById(R.id.left_arrow_settings);
+        left_arrow.setColorFilter(sessionUser.userInfo.partner.fontColorSmartphone);
         left_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.streamnow.europaallee.activities.BaseActivity;
 import com.streamnow.europaallee.datamodel.DMCategory;
@@ -58,15 +59,25 @@ public class DocmanMenuActivity extends BaseActivity
         config.locale = locale;
         getResources().updateConfiguration(config,getResources().getDisplayMetrics());
         setContentView(R.layout.activity_docman_menu);
+        String name_service = getIntent().getStringExtra("name_service");
         RelativeLayout mainBackground = (RelativeLayout) findViewById(R.id.main_background);
         mainBackground.setBackgroundColor(sessionUser.userInfo.partner.backgroundColorSmartphone);
         ImageView leftArrow = (ImageView)findViewById(R.id.left_arrow_doc);
+        leftArrow.setColorFilter(sessionUser.userInfo.partner.fontColorSmartphone);
         leftArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+        TextView nameService_textView = (TextView)findViewById(R.id.name_service);
+        nameService_textView.setTextColor(sessionUser.userInfo.partner.fontColorTop);
+        if(name_service!=null && !name_service.equals("")){
+            nameService_textView.setText(name_service);
+        }
+        else{
+            nameService_textView.setVisibility(View.GONE);
+        }
         dividerTop = findViewById(R.id.divider);
         this.isRootMenu = getIntent().getBooleanExtra("root_menu", false);
 

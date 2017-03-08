@@ -1,4 +1,4 @@
-package com.streamnow.lindaumobile.utils;
+package com.streamnow.lindaufibermobile.utils;
 
 /**
  * Created by Miguel Angel on 27/07/2016.

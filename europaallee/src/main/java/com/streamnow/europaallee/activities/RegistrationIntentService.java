@@ -68,7 +68,7 @@ public class RegistrationIntentService extends IntentService {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
-                        Log.i("Log", "response" + response.toString());
+                        Log.i("Log", "response-->" + response.toString());
                         if (response.getString("status").equalsIgnoreCase("ok")) {
 
                         }

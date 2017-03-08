@@ -5,7 +5,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -56,10 +58,17 @@ public class ContactActivity extends BaseActivity {
         setContentView(R.layout.activity_contact);
 
         String apiUrlString = getIntent().getStringExtra("api_url");
-
+        String name_service = getIntent().getStringExtra("name_service");
         LinearLayout bgnd = (LinearLayout) findViewById(R.id.bar_bgnd);
         ImageView imageView = (ImageView) findViewById(R.id.contact_bgnd_image);
-
+        TextView nameService_textView = (TextView)findViewById(R.id.name_service);
+        nameService_textView.setTextColor(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.fontColorTop);
+        if(name_service!=null && !name_service.equals("")){
+            nameService_textView.setText(name_service);
+        }
+        else{
+            nameService_textView.setVisibility(View.GONE);
+        }
         int colorTop = Lindau.getInstance().getCurrentSessionUser().userInfo.partner.colorTop;
 
         bgnd.setBackgroundColor(colorTop);
@@ -77,6 +86,7 @@ public class ContactActivity extends BaseActivity {
         });
 
         ImageView leftArrow = (ImageView) findViewById(R.id.left_arrow_contact);
+        leftArrow.setColorFilter(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.fontColorSmartphone);
         leftArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,6 +134,31 @@ public class ContactActivity extends BaseActivity {
 
     private void setOutlets() {
         this.phoneTextView.setText(this.contact.telephone);
+        this.phoneTextView.setTextColor(Color.BLACK);
+
+        if(contact.telephone!=null && !contact.telephone.equals("")){
+            phoneTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    new AlertDialog.Builder(ContactActivity.this)
+                            .setMessage(contact.telephone)
+                            .setPositiveButton(getString(R.string.call), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent callIntent =new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contact.telephone, null));
+                                    startActivity(callIntent);
+                                }
+                            })
+                            .setNegativeButton(getString(R.string.call_abort), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .show();
+                }
+            });
+        }
         this.emailTextView.setText(this.contact.email);
 
         String spaceChar = "\n";

@@ -67,6 +67,7 @@ public class MenuAdapter extends BaseAdapter {
         IMenuPrintable menuPrintable = items.get(position);
 
         ImageView imageArrow = (ImageView) convertView.findViewById(R.id.row_arrow);
+        imageArrow.setColorFilter(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.fontColorSmartphone);
         ImageView imageView = (ImageView) convertView.findViewById(R.id.row_icon);
         ImageView bgnd_circle = (ImageView) convertView.findViewById(R.id.bgnd_circle);
 

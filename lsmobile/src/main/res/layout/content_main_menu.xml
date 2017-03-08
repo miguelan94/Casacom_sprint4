@@ -64,6 +64,15 @@
                 android:padding="12dp"
                 android:layout_marginBottom="6dp"
                 android:visibility="gone" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:id="@+id/category_name"
+                android:typeface="normal"
+                android:layout_marginBottom="7dp" />
         </RelativeLayout>
 
         <View

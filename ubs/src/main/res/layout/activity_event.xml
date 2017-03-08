@@ -21,22 +21,25 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/name_service"
+                    android:layout_gravity="center" />
+            </LinearLayout>
             <ImageView
                 android:id="@+id/event_bgnd_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@drawable/navbar_bgnd"
                 android:adjustViewBounds="true" />
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:src="@drawable/nav_pill"
-                android:layout_marginBottom="9dp"
-                android:adjustViewBounds="true"
-                android:maxWidth="42dp"
-                android:maxHeight="42dp"
-                android:scaleType="fitCenter"/>
 
             <ImageView
                 android:layout_width="wrap_content"

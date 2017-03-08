@@ -54,4 +54,6 @@
     <string name="shopping_confirm">Are you sure want to buy this service?</string>
     <string name="buy">Buy</string>
     <item name="TAGService" type="string">service</item>
+    <string name="call">Call</string>
+    <string name="call_abort">Cancel</string>
 </resources>

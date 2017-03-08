@@ -51,11 +51,11 @@ public class MainActivity extends BaseActivity{
     private String[] arrayString = null;
     private SharedPreferences preferences;
     private  KeyStore keyStore;
+    public boolean tokenRefresh =  false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Intent intent = new Intent(this, RegistrationIntentService.class);
-        //startService(intent);
+
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         if(preferences.getBoolean("keepSession",false) && !preferences.getString("AppId","").equalsIgnoreCase("")){
@@ -151,6 +151,7 @@ public class MainActivity extends BaseActivity{
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response)
                 {
+                    tokenRefresh = true;
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                     SharedPreferences.Editor prefEditor = sharedPref.edit();
 
@@ -191,7 +192,6 @@ public class MainActivity extends BaseActivity{
 
         }else if(difference<=0){
             //login
-
             System.out.println("login");
             final String username = preferences.getString("user","");
             String cipherPassword = preferences.getString("pass","");
@@ -237,8 +237,8 @@ public class MainActivity extends BaseActivity{
                         prefEditor.putString("user",username);
                         prefEditor.putString("pass",cipherPass);
                         prefEditor.apply();
-                        //Intent i = new Intent (MainActivity.this,RegistrationIntentService.class);
-                        //startService(i);
+                        Intent i = new Intent (MainActivity.this,RegistrationIntentService.class);
+                        startService(i);
                         Intent intent = new Intent(MainActivity.this, MenuActivity.class);
                         startActivity(intent);
                         finish();
@@ -279,6 +279,10 @@ public class MainActivity extends BaseActivity{
             if( LDsessionUser != null && LDsessionUser.accessToken != null )
             {
                 Lindau.getInstance().setCurrentSessionUser(LDsessionUser);
+                if (tokenRefresh) {
+                    Intent i = new Intent(MainActivity.this, RegistrationIntentService.class);
+                    startService(i);
+                }
                 Intent intent = new Intent(this, MenuActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

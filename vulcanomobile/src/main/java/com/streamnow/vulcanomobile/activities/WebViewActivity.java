@@ -23,6 +23,7 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 import com.streamnow.vulcanomobile.R;
@@ -53,7 +54,7 @@ public class WebViewActivity extends BaseActivity {
         setContentView(R.layout.activity_web_view);
         String webUrlString = getIntent().getStringExtra("web_url");
         String serviceId = getIntent().getStringExtra("service_id");
-
+        String serviceName = getIntent().getStringExtra("service_name");
 
         if (webUrlString == null) {
             //finish();
@@ -62,6 +63,8 @@ public class WebViewActivity extends BaseActivity {
         LinearLayout bgnd = (LinearLayout) findViewById(R.id.bar_bgnd);
         ImageView imageView = (ImageView) findViewById(R.id.bgnd_image);
         ImageView leftArrow = (ImageView) findViewById(R.id.image_left_arrow);
+        leftArrow.setColorFilter(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.fontColorSmartphone);
+        TextView textView_serviceName = (TextView)findViewById(R.id.name_service);
         leftArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,7 +73,13 @@ public class WebViewActivity extends BaseActivity {
         });
 
         this.webView = (WebView) findViewById(R.id.webView);
-
+        if(serviceName!=null && !serviceName.equals("")){
+            textView_serviceName.setTextColor(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.fontColorTop);
+            textView_serviceName.setText(serviceName);
+        }
+        else{
+             textView_serviceName.setVisibility(View.GONE);
+        }
         if (serviceId != null && (serviceId.equals("29") || serviceId.equals("57"))) {
             FrameLayout topFrameLayout = (FrameLayout) findViewById(R.id.webview_top_frame);
             topFrameLayout.setVisibility(View.GONE);

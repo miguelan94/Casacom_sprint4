@@ -21,22 +21,17 @@ public class PushNotifications extends GcmListenerService {
     @Override
     public void onMessageReceived(String from, Bundle data) {
 
-        String message = data.getString("test");
-        String message1 = data.getString("Message");
-
-        Log.d("From", "From: " + from);
-        Log.d("Msg", "Message: " + message);
-        Log.d("Msg", "Message1: " + message1);
+        String message = data.getString("message");
 
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("Notification")
+                        .setContentTitle(getString(R.string.app_name))
                         .setContentText(message);
-        Intent resultIntent = new Intent(this, MenuActivity.class);
+        Intent resultIntent = new Intent(this, MainActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MenuActivity.class);
+        stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(

@@ -69,8 +69,8 @@ public class SettingsActivity extends BaseActivity {
             String [] list = {getResources().getString(R.string.profile),getResources().getString(R.string.contacts),getResources().getString(R.string.logout),getResources().getString(R.string.shopping)};
             //items.addAll(Arrays.asList(list)); //all
             items.add(0,list[0]);
-            items.add(1,list[3]);
-            items.add(2,list[2]);
+          //  items.add(1,list[3]);
+            items.add(1,list[2]);
         }
         View dividerTop = findViewById(R.id.divider);
         View dividerBottom = findViewById(R.id.dividerBottom);
@@ -90,6 +90,7 @@ public class SettingsActivity extends BaseActivity {
             }
         });
         ImageView left_arrow = (ImageView)findViewById(R.id.left_arrow_settings);
+        left_arrow.setColorFilter(sessionUser.userInfo.partner.fontColorSmartphone);
         left_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,11 +122,7 @@ public class SettingsActivity extends BaseActivity {
         if(position==0){ //profile clicked
             Intent i = new Intent(this,ProfileActivity.class);
             startActivity(i);
-        }else if(position==1){//shopping
-            Intent i = new Intent(this,ShoppingActivity.class);
-            startActivity(i);
-
-        }else if(position==2){//logout
+        }else if(position==1){//logout
             RequestParams requestParams = new RequestParams();
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(SettingsActivity.this);
@@ -175,7 +172,13 @@ public class SettingsActivity extends BaseActivity {
 
                 }
             });
-        }else if(position==3){//contacts
+        }
+        else if(position==2){//shopping
+            Intent i = new Intent(this,ShoppingActivity.class);
+            startActivity(i);
+
+        }
+        else if(position==3){//contacts
             Intent intent= new Intent(Intent.ACTION_PICK,  ContactsContract.Contacts.CONTENT_URI);
             intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
             startActivityForResult(intent,PICK_CONTACT_REQUEST);

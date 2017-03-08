@@ -46,4 +46,6 @@
     <string name="no_entertainment_avaliable">Esta funcionalidad no funciona en Android 5.x</string>
     <string name="select_BP">Seleccionar</string>
     <string name="switch_loggued">Permanecer conectado</string>
+    <string name="call">Llamar</string>
+    <string name="call_abort">Cancelar</string>
 </resources>

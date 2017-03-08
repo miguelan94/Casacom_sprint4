@@ -86,6 +86,7 @@ public class MenuActivity extends BaseActivity
 
 
         categoryId = this.getIntent().getStringExtra("category_id");
+        String categoryName = getIntent().getStringExtra("category_name");
         ArrayList<? extends IMenuPrintable> adapterArray;
 
         if( categoryId == null )
@@ -115,6 +116,12 @@ public class MenuActivity extends BaseActivity
 
 
         TextView textView = (TextView)findViewById(R.id.text_app_name);
+        TextView categoryName_text = (TextView)findViewById(R.id.category_name);
+        if (sessionUser.userInfo.partner.smartphoneAppName != null && sessionUser.userInfo.partner.smartphoneAppName.isEmpty()) {
+            textView.setText(sessionUser.userInfo.partner.company);
+        } else {
+            textView.setText(sessionUser.userInfo.partner.smartphoneAppName);
+        }
         if(sessionUser.userInfo.partner.smartphoneAppName!=null && sessionUser.userInfo.partner.smartphoneAppName.isEmpty()){
             textView.setText(sessionUser.userInfo.partner.company);
         }
@@ -128,6 +135,7 @@ public class MenuActivity extends BaseActivity
         RelativeLayout bgnd_image = (RelativeLayout)findViewById(R.id.bgnd_image);
         ImageView smart_image = (ImageView)findViewById(R.id.smartphone_image);
         ImageView left_arrow = (ImageView)findViewById(R.id.left_arrow);
+        left_arrow.setColorFilter(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.fontColorSmartphone);
         left_arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,7 +146,7 @@ public class MenuActivity extends BaseActivity
         ImageView imageView = (ImageView)findViewById(R.id.settings_ico); //settings
         if(!getIntent().getBooleanExtra("sub_menu",false)){
             //smart_image.setImageResource(sessionUser.userInfo.partner.backgroundSmartphoneImage);
-
+            categoryName_text.setVisibility(View.GONE);
             System.out.println("Image: " + sessionUser.userInfo.partner.backgroundSmartphoneImage);
             dividerTop.setVisibility(View.GONE);
             Picasso.with(this)
@@ -159,6 +167,11 @@ public class MenuActivity extends BaseActivity
             dividerTop.setBackgroundColor(sessionUser.userInfo.partner.lineColorSmartphone);
             dividerTop.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.GONE);
+            if(categoryName!=null && !categoryName.equals("")){
+                categoryName_text.setVisibility(View.VISIBLE);
+                categoryName_text.setTextColor(sessionUser.userInfo.partner.fontColorTop);
+                categoryName_text.setText(categoryName);
+            }
             textView.setVisibility(View.GONE);
             smart_image.setVisibility(View.GONE);
             //bgnd_image.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT));
@@ -196,7 +209,7 @@ public class MenuActivity extends BaseActivity
             System.out.println("service: " + service.name + " type: " + service.type);
             switch (service.type) {
                 case "2": {
-                    if(categoryId.equals("5")){
+                    /*if(categoryId.equals("5")){
                         System.out.println("AppID: " + service.secretId + " user: " + getIntent().getStringExtra("user_vodka") + " pass: " + getIntent().getStringExtra("pass_vodka"));
                         RequestParams requestParams = new RequestParams();
                         requestParams.add("appId", service.secretId);
@@ -208,18 +221,7 @@ public class MenuActivity extends BaseActivity
                         AsyncHttpClient httpClient = new AsyncHttpClient();
                         httpClient.setUserAgent("Mozilla/5.0 (Linux; Android 4.4; Nexus 5 Build/_BuildID_) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/537.36");
                         httpClient.setEnableRedirects(true);
-                   /* KeyStore trustStore = null;
-                    MySSLSocketFactory socketFactory = null;
-                    try {
-                        trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-                        trustStore.load(null, null);
-                        socketFactory = new MySSLSocketFactory(trustStore);
-                        socketFactory.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    httpClient.setSSLSocketFactory(socketFactory);
-                    */
+
                         httpClient.setSSLSocketFactory(MySSLSocketFactory.getFixedSocketFactory());
                         httpClient.post(service.apiUrl, requestParams, new JsonHttpResponseHandler() {
                             @Override
@@ -265,19 +267,21 @@ public class MenuActivity extends BaseActivity
                             }
                         });
                         break;
-                    }
-                    else{
-                        final Intent intent = new Intent(this, WebViewActivity.class);
+                    }*/
+                  //  else{
+                        Intent intent = new Intent(this, WebViewActivity.class);
                         intent.putExtra("web_url", service.webviewUrl);
                         intent.putExtra("service_id", service.id);
+                        intent.putExtra("service_name",service.name);
                         startActivity(intent);
                         break;
-                    }
+                    //}
 
                 }
                 case "3": {
                     // TODO Open youtube video here
                     Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("service_name",service.name);
                     intent.putExtra("web_url", "https://m.youtube.com/watch?v=" + service.webviewUrl);
                     startActivity(intent);
                     break;
@@ -315,12 +319,14 @@ public class MenuActivity extends BaseActivity
                 }
                 case "9": {
                     Intent intent = new Intent(this, ContactActivity.class);
+                    intent.putExtra("name_service",service.name);
                     intent.putExtra("api_url", service.apiUrl);
                     startActivity(intent);
                     break;
                 }
                 case "10": {
                     Intent intent = new Intent(this, DocmanMenuActivity.class);
+                    intent.putExtra("name_service",service.name);
                     intent.putExtra("root_menu", true);
                     intent.putExtras(new Bundle());
                     startActivity(intent);
@@ -328,6 +334,7 @@ public class MenuActivity extends BaseActivity
                 }
                 case "11": {
                     Intent i = new Intent(this, EventActivity.class);
+                    i.putExtra("name_service",service.name);
                     startActivity(i);
                     break;
                 }
@@ -372,6 +379,7 @@ public class MenuActivity extends BaseActivity
                                     intent.putExtra("web_url", service.webviewUrl);
                                     intent.putExtra("service_id", service.id);
                                     intent.putExtra("token", response.getString("token"));
+                                    intent.putExtra("service_name",service.name);
                                     startActivity(intent);
                                 }
                             } catch (JSONException e) {
@@ -426,6 +434,7 @@ public class MenuActivity extends BaseActivity
                     case "2": {
                         Intent intent = new Intent(this, WebViewActivity.class);
                         intent.putExtra("web_url", service.webviewUrl);
+                        intent.putExtra("service_name",service.name);
                         startActivity(intent);
                         break;
                     }
@@ -433,6 +442,7 @@ public class MenuActivity extends BaseActivity
                         // TODO Open youtube video here
                         Intent intent = new Intent(this, WebViewActivity.class);
                         intent.putExtra("web_url", "https://m.youtube.com/watch?v=" + service.webviewUrl);
+                        intent.putExtra("service_name",service.name);
                         startActivity(intent);
                         break;
                     }
@@ -452,6 +462,7 @@ public class MenuActivity extends BaseActivity
                     }
                     case  "9": {
                         Intent intent = new Intent(this, ContactActivity.class);
+                        intent.putExtra("name_service",service.name);
                         intent.putExtra("api_url", service.apiUrl);
                         startActivity(intent);
                         break;
@@ -459,12 +470,14 @@ public class MenuActivity extends BaseActivity
                     case  "10": {
                         Intent intent = new Intent(this, DocmanMenuActivity.class);
                         intent.putExtra("root_menu", true);
+                        intent.putExtra("name_service",service.name);
                         intent.putExtras(new Bundle());
                         startActivity(intent);
                         break;
                     }
                     case "11": {
                         Intent i = new Intent(this, EventActivity.class);
+                        i.putExtra("name_service",service.name);
                         startActivity(i);
                         break;
                     }
@@ -474,6 +487,7 @@ public class MenuActivity extends BaseActivity
             {
                 final Intent intent = new Intent(this, MenuActivity.class);
                 intent.putExtra("category_id", sessionUser.categories.get(position).id);
+                intent.putExtra("category_name" , sessionUser.categories.get(position).name);
                 intent.putExtra("sub_menu", true);
                 if(sessionUser.categories.get(position).id.equals("5")){//entertainment
                     //if(Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP || Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1){ //API 21-22
