@@ -4,11 +4,19 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -29,13 +38,14 @@ import com.streamnow.sbb.lib.LDConnection;
 import com.streamnow.sbb.utils.Lindau;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 
-public class    ContactActivity extends BaseActivity
+public class ContactActivity extends BaseActivity
 {
     private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
@@ -45,10 +55,15 @@ public class    ContactActivity extends BaseActivity
     private TextView emailTextView;
     private TextView contactInfoTextView;
     private EditText messageEditText;
+    private TextView companyTextView;
+    private TextView scheduleContact;
+    private TextView scheduleTitle;
+    private  TextView fullName;
 
     private LDContact contact;
     private ProgressDialog progressDialog;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -63,8 +78,46 @@ public class    ContactActivity extends BaseActivity
         String apiUrlString = getIntent().getStringExtra("api_url");
         String name_service = getIntent().getStringExtra("name_service");
 
+
+
+
+
+        // Instantiate a ViewPager
+       /*ViewPager pager = (ViewPager) this.findViewById(R.id.pager);
+
+        // Create an adapter with the fragments we show on the ViewPager
+       ViewPagerAdapter adapter = new ViewPagerAdapter(
+                getSupportFragmentManager());
+        adapter.addFragment(FirstFragmentContact.newInstance("FirstFragment, Instance 1"));
+        adapter.addFragment(SecondFragmentContact.newInstance("SecondFragment, Instance 1"));
+        pager.setAdapter(adapter);
+*/
+       /* ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(new ContactActivity.MyPagerAdapter(getSupportFragmentManager()));
+*/
+
+
+        /*SlidingSplashView slidingSplashView = (SlidingSplashView)findViewById(R.id.splash);
+        slidingSplashView.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                //setContentView(R.layout.activity_event);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+*/
         LinearLayout bgnd = (LinearLayout)findViewById(R.id.bar_bgnd);
         ImageView imageView = (ImageView) findViewById(R.id.contact_bgnd_image);
+        fullName = (TextView)findViewById(R.id.fullName_contact);
         TextView nameService_textView = (TextView)findViewById(R.id.name_service);
         nameService_textView.setTextColor(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.fontColorTop);
         if(name_service!=null && !name_service.equals("")){
@@ -100,21 +153,39 @@ public class    ContactActivity extends BaseActivity
                 finish();
             }
         });
+        FloatingActionButton floatingActionButton_call = (FloatingActionButton)findViewById(R.id.floating_button_call);
+        FloatingActionButton floatingActionButton_room = (FloatingActionButton)findViewById(R.id.floating_button_room);
+        FloatingActionButton floatingActionButton_earth = (FloatingActionButton)findViewById(R.id.floating_button_earth);
+        FloatingActionButton floatingActionButton_email = (FloatingActionButton)findViewById(R.id.floating_button_email);
+  //      Button button = (Button)findViewById(R.id.button);
+        // button.setBackgroundColor(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.colorTop);
+//        button.setBackgroundTintList(ColorStateList.valueOf(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.colorTop));
 
-        this.avatarImageView = (ImageView) findViewById(R.id.contact_avatar);
+        floatingActionButton_call.setBackgroundTintList(ColorStateList.valueOf(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.colorTop));
+        floatingActionButton_room.setBackgroundTintList(ColorStateList.valueOf(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.colorTop));
+        floatingActionButton_earth.setBackgroundTintList(ColorStateList.valueOf(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.colorTop));
+        floatingActionButton_email.setBackgroundTintList(ColorStateList.valueOf(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.colorTop));
+        /*this.avatarImageView = (ImageView) findViewById(R.id.contact_avatar);
         this.phoneTextView = (TextView) findViewById(R.id.contact_phone);
         this.emailTextView = (TextView) findViewById(R.id.contact_email);
         this.contactInfoTextView = (TextView) findViewById(R.id.contact_info);
-        this.messageEditText = (EditText) findViewById(R.id.contact_msg_edittext);
+        this.messageEditText = (EditText) findViewById(R.id.contact_msg_edittext);*/
 
-        Button buttonSend = (Button) findViewById(R.id.button_send);
-        buttonSend.setBackgroundColor(colorTop);
+
+        this.avatarImageView = (ImageView) findViewById(R.id.contact_avatar);
+        this.scheduleTitle = (TextView)findViewById(R.id.schedule);
+        this.scheduleContact = (TextView)findViewById(R.id.scheduleContact);
+        this.companyTextView = (TextView) findViewById(R.id.companyContact);
+
+
+        //Button buttonSend = (Button) findViewById(R.id.button_send);
+        //buttonSend.setBackgroundColor(colorTop);
 
         progressDialog = ProgressDialog.show(this, getString(R.string.app_name), getString(R.string.please_wait), true);
 
         RequestParams requestParams = new RequestParams();
 
-        if(apiUrlString==null || apiUrlString.equals("")){
+        /*if(apiUrlString==null || apiUrlString.equals("")){
 
             requestParams.add("access_token", Lindau.getInstance().getCurrentSessionUser().accessToken);
             LDConnection.get("getContact", requestParams, new ResponseHandlerJson());
@@ -125,7 +196,9 @@ public class    ContactActivity extends BaseActivity
             httpClient.setSSLSocketFactory(MySSLSocketFactory.getFixedSocketFactory());
             httpClient.setEnableRedirects(true);
             httpClient.get(endPoint,requestParams,new ResponseHandlerJson());
-        }
+        }*/
+        requestParams.add("access_token", Lindau.getInstance().getCurrentSessionUser().accessToken);
+        LDConnection.get("getContact", requestParams, new ResponseHandlerJson());
 
 
 
@@ -134,7 +207,31 @@ public class    ContactActivity extends BaseActivity
 
 
     }
+   /* private class MyPagerAdapter extends FragmentPagerAdapter {
 
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int pos) {
+            switch(pos) {
+
+                case 0: return FirstFragmentContact.newInstance("FirstFragment, Instance 1");
+                case 1: return SecondFragmentContact.newInstance("SecondFragment, Instance 1");
+                case 2: return ThirdFragment.newInstance("ThirdFragment, Instance 1");
+                case 3: return ThirdFragment.newInstance("ThirdFragment, Instance 2");
+                case 4: return ThirdFragment.newInstance("ThirdFragment, Instance 3");
+                default: return FirstFragmentContact.newInstance("ThirdFragment, Default");
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 5;
+        }
+    }
+*/
     private void showAlertDialog(String msg)
     {
         new AlertDialog.Builder(this)
@@ -149,6 +246,12 @@ public class    ContactActivity extends BaseActivity
 
     private void setOutlets()
     {
+
+
+        this.companyTextView.setText(this.contact.company);
+        this.scheduleContact.setText(this.contact.schedule);
+        this.scheduleTitle.setText(getString(R.string.opening_schedule));
+/*
         this.phoneTextView.setText(this.contact.telephone);
         this.phoneTextView.setTextColor(Color.BLACK);
 
@@ -184,7 +287,7 @@ public class    ContactActivity extends BaseActivity
                                     this.contact.city + spaceChar +
                                     getString(R.string.opening_schedule) + ":" + spaceChar +
                                     this.contact.schedule;
-        this.contactInfoTextView.setText(contactInfoString);
+        this.contactInfoTextView.setText(contactInfoString);*/
 
         final String avatarUrl = LDConnection.getAbsoluteUrl("getContactAvatar") +
                 "?access_token=" + Lindau.getInstance().getCurrentSessionUser().accessToken +
@@ -194,6 +297,9 @@ public class    ContactActivity extends BaseActivity
                 .load(avatarUrl)
                 .placeholder(R.drawable.contact_placeholder)
                 .into(this.avatarImageView);
+
+        System.out.println("FullName----> " + contact.fullname);
+        fullName.setText(this.contact.fullname);
     }
 
     public void sendMessage(View v)
@@ -226,6 +332,7 @@ public class    ContactActivity extends BaseActivity
         {
             try
             {
+                System.out.println("Contact---> " + response.toString());
                 if( response.getString("status").equals("ok") )
                 {
                     ArrayList<LDContact> contacts = LDContact.contactsFromArray(response.getJSONArray("contacts"));
@@ -296,4 +403,5 @@ public class    ContactActivity extends BaseActivity
             return false;
         }
     }
+
 }

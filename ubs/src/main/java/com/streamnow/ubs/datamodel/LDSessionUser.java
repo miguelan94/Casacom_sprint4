@@ -58,7 +58,7 @@ public class LDSessionUser {
 
     public ArrayList<? extends IMenuPrintable> getAvailableServicesForSession() {
         ArrayList<IMenuPrintable> retArray = new ArrayList<>();
-
+        System.out.println("SIZE--------------------> " + this.availableServices.size());
         for (int i = 0; i < this.availableServices.size(); i++) {
             LDService service = this.availableServices.get(i);
             if (service.categoryId == 0 && service.active.equals("1") && service.availableInApp.equals("1") &&
@@ -66,7 +66,7 @@ public class LDSessionUser {
                 retArray.add(service);
             }
         }
-
+        System.out.println("SIZE categories--------------------> " + this.categories.size());
         retArray.addAll(this.categories);
 
         return retArray;

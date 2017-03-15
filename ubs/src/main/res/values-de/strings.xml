@@ -48,4 +48,5 @@
     <string name="switch_loggued">Angemeldet bleiben</string>
     <string name="call">Anruf</string>
     <string name="call_abort">Abbrechen</string>
+    <string name="login_failure">Es gibt ein Problem mit dem Service. Bitte kontaktieren Sie uns.</string>
 </resources>

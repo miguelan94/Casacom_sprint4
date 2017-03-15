@@ -50,4 +50,17 @@
     <string name="switch_loggued">Stay Logged</string>
     <string name="call">Call</string>
     <string name="call_abort">Cancel</string>
+    <string name="contactTitle_main">Administrator</string>
+    <string name="contactTitle_next">Information</string>
+
+
+
+
+
+    <integer-array name="img_id_arr">
+        <item>@drawable/selector</item>
+        <item>@drawable/selector</item>
+        <item>@drawable/selector</item>
+    </integer-array>
+
 </resources>

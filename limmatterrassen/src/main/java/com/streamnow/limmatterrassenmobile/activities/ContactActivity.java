@@ -106,7 +106,7 @@ public class ContactActivity extends BaseActivity {
 
         RequestParams requestParams = new RequestParams();
 
-        if (apiUrlString == null || apiUrlString.equals("")) {
+        /*if (apiUrlString == null || apiUrlString.equals("")) {
 
             requestParams.add("access_token", Lindau.getInstance().getCurrentSessionUser().accessToken);
             LDConnection.get("getContact", requestParams, new ResponseHandlerJson());
@@ -116,7 +116,9 @@ public class ContactActivity extends BaseActivity {
             httpClient.setSSLSocketFactory(MySSLSocketFactory.getFixedSocketFactory());
             httpClient.setEnableRedirects(true);
             httpClient.get(endPoint, requestParams, new ResponseHandlerJson());
-        }
+        }*/
+        requestParams.add("access_token", Lindau.getInstance().getCurrentSessionUser().accessToken);
+        LDConnection.get("getContact", requestParams, new ResponseHandlerJson());
 
 
     }

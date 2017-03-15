@@ -293,12 +293,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     System.out.println("onFailure json");
+                    showAlertDialog(getString(R.string.login_failure));
 
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
                     System.out.println("onFailure array");
+                    showAlertDialog(getString(R.string.login_failure));
                 }
 
                 @Override
@@ -378,12 +380,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
                 System.out.println("login onFailure throwable: " + throwable.toString() + " status code = " + statusCode + " response: " + response.toString());
                 progressDialog.dismiss();
+                showAlertDialog(getString(R.string.login_failure));
+
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 System.out.println("login onFailure json " + throwable.toString());
                 progressDialog.dismiss();
+                showAlertDialog(getString(R.string.login_failure));
             }
         });
     }

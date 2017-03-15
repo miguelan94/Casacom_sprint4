@@ -48,4 +48,5 @@
     <string name="switch_loggued">Permanecer conectado</string>
     <string name="call">Llamar</string>
     <string name="call_abort">Cancelar</string>
+    <string name="login_failure">Hay un problema con el servicio. Por favor, contáctenos</string>
 </resources>

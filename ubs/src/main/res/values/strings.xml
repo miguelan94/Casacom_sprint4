@@ -50,4 +50,5 @@
     <string name="switch_loggued">Stay Logged</string>
     <string name="call">Call</string>
     <string name="call_abort">Cancel</string>
+    <string name="login_failure">There is a problem with the service. Please contact us.</string>
 </resources>

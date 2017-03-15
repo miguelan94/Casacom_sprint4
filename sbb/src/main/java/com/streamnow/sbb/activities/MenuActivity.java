@@ -15,9 +15,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.customtabs.CustomTabsClient;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.customtabs.CustomTabsServiceConnection;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -59,7 +56,6 @@ public class MenuActivity extends BaseActivity
 {
     protected final LDSessionUser sessionUser = Lindau.getInstance().getCurrentSessionUser();
     String categoryId;
-    CustomTabsClient mCustomTabsClient;
 
 
     @Override
@@ -461,7 +457,7 @@ public class MenuActivity extends BaseActivity
                         break;
                     }
                     case  "9": {
-                        Intent intent = new Intent(this, ContactActivity.class);
+                        Intent intent = new Intent(this, ScreenSlidePageFragment.class);
                         intent.putExtra("name_service",service.name);
                         intent.putExtra("api_url", service.apiUrl);
                         startActivity(intent);

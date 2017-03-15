@@ -83,11 +83,12 @@ public class MenuActivity extends BaseActivity {
 
         if (categoryId == null) {
             adapterArray = sessionUser.getAvailableServicesForSession();
+            System.out.println("-------AVAILABLE FOR SESSION: " + adapterArray.size());
         } else {
             adapterArray = sessionUser.getAvailableServicesForCategoryId(categoryId);
         }
 
-
+        System.out.println("size----------------------------: " + adapterArray.size());
         RelativeLayout mainBackground = (RelativeLayout) findViewById(R.id.main_menu_background);
         mainBackground.setBackgroundColor(sessionUser.userInfo.partner.backgroundColorSmartphone);
 

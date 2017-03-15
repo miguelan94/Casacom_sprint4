@@ -18,7 +18,7 @@ public class Lindau extends Application {
     private static Lindau sharedInstance;
 
     public String appId = "com.streamnow.ubsmobile";
-    public String appDemoAccount = "demo.ubs";
+    public String appDemoAccount = "democs";
     private LDSessionUser currentSessionUser;
     private ArrayList<IMenuPrintable> userTree;
     private ArrayList<IMenuPrintable> repoTree;
