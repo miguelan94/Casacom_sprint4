@@ -48,4 +48,9 @@
     <string name="switch_loggued">Angemeldet bleiben</string>
     <string name="call">Anruf</string>
     <string name="call_abort">Abbrechen</string>
+    <string name="contactMessage">Geben Sie eine Nachricht ein</string>
+    <string name="emptyEmail_contact">Nicht definierte E-Mail</string>
+    <string name="emptyUrl_contact">Nicht definierte URL</string>
+    <string name="emptyPhone_contact">Nicht definierte Nummer</string>
+    <string name="emptyAddress_contact">Nicht definierte Adresse</string>
 </resources>

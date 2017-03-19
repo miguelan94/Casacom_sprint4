@@ -50,10 +50,11 @@
     <string name="switch_loggued">Stay Logged</string>
     <string name="call">Call</string>
     <string name="call_abort">Cancel</string>
-    <string name="contactTitle_main">Administrator</string>
-    <string name="contactTitle_next">Information</string>
-
-
+    <string name="contactMessage">Type a message</string>
+    <string name="emptyEmail_contact">Email not defined</string>
+    <string name="emptyUrl_contact">URL not defined</string>
+    <string name="emptyPhone_contact">Number not defined</string>
+    <string name="emptyAddress_contact">Address not defined</string>
 
 
 

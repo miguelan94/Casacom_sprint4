@@ -9,7 +9,8 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.streamnow.sbb.activities.ContactActivity"
-    android:background="#EFEFF0">
+    android:background="#EFEFF0"
+    android:id="@+id/relativeLayout">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -23,22 +24,11 @@
 
 
         <TextView
-                android:text="@string/contactTitle_main"
-                android:layout_width="match_parent"
+            android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/title_main"
-                android:layout_weight="0.5"
-            android:gravity="right" />
-
-        <TextView
-                android:text="@string/contactTitle_next"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/title_next"
-                android:layout_weight="0.8"
-            android:elevation="0dp"
-            android:gravity="right"
-            android:ellipsize="start" />
+                android:layout_weight="1"
+            android:gravity="center" />
 
 
     </LinearLayout>
@@ -52,7 +42,7 @@
         android:layout_marginRight="20dp"
         android:id="@+id/background"
         android:elevation="0dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="8dp">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -70,29 +60,14 @@
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center_vertical|center_horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:id="@+id/profile_title"
-                            android:textColor="#000000" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
                         android:gravity="center">
 
                         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:id="@+id/contact_avatar"
-                            android:layout_width="120dp"
-                            android:layout_height="130dp"
+                            android:layout_width="110dp"
+                            android:layout_height="120dp"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginTop="10dp"
-                            android:background="@color/colorBP"
+                            android:layout_marginTop="5dp"
                             app:border_color="@color/white"
                             app:border_width="3dp" />
 
@@ -177,7 +152,6 @@
                             android:lines="2" />
                     </LinearLayout>
                 </LinearLayout>
-
 
 
                 <LinearLayout
@@ -292,10 +266,33 @@
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginTop="5dp"
+                    android:padding="8dp">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="textMultiLine"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:background="#EFEFF0"
+                        android:textCursorDrawable="@null"
+                        android:gravity="top"
+                        android:textSize="13sp"
+                        android:hint="@string/contactMessage"
+                        android:id="@+id/contact_msg"
+                        android:maxLines="6"
+                        android:cursorVisible="true" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginTop="15dp"
                     android:layout_marginBottom="4dp">
 
                     <Button

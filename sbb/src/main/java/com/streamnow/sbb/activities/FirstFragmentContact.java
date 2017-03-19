@@ -1,26 +1,34 @@
 package com.streamnow.sbb.activities;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -30,6 +38,7 @@ import com.streamnow.sbb.datamodel.LDContact;
 import com.streamnow.sbb.lib.LDConnection;
 import com.streamnow.sbb.utils.Lindau;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -73,7 +82,7 @@ public class FirstFragmentContact extends Fragment{
 
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.content_contact, container, false);
 
 
@@ -90,7 +99,25 @@ public class FirstFragmentContact extends Fragment{
 
             String apiUrlString = getArguments().getString("api");
             String name_service = getArguments().getString("name");
+            String response = getArguments().getString("contacts");
+            JSONObject json ;
+            int contactPosition = getArguments().getInt("contactPosition");
+            if(response != null){
+                try {
+                    json = new JSONObject(response);
+                    ArrayList<LDContact> contacts = LDContact.contactsFromArray(json.getJSONArray("contacts"));
+                    //contact = contacts.get(0);
+                    contact = contacts.get(contactPosition);
 
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                getActivity().finish();
+            }
+
+           // ArrayList<LDContact> contacts = LDContact.contactsFromArray(json.getJSONArray("contacts"));
 
 
 
@@ -166,11 +193,43 @@ public class FirstFragmentContact extends Fragment{
                     getActivity().finish();
                 }
             });*/
+            RelativeLayout relativeLayout = (RelativeLayout)v.findViewById(R.id.relativeLayout);
+            TextView textView = (TextView)v.findViewById(R.id.title_main);
+            textView.setText(contact.role);
             fullName = (TextView)v.findViewById(R.id.fullName_contact);
             FloatingActionButton floatingActionButton_call = (FloatingActionButton)v.findViewById(R.id.floating_button_call);
             FloatingActionButton floatingActionButton_room = (FloatingActionButton)v.findViewById(R.id.floating_button_room);
             FloatingActionButton floatingActionButton_earth = (FloatingActionButton)v.findViewById(R.id.floating_button_earth);
             FloatingActionButton floatingActionButton_email = (FloatingActionButton)v.findViewById(R.id.floating_button_email);
+            final EditText message = (EditText)v.findViewById(R.id.contact_msg);
+            message.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    message.setHint("");
+                    return false;
+                }
+            });
+            relativeLayout.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    if(message.getHint().toString().equals("")){
+                        message.setHint(getString(R.string.contactMessage));
+                        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                    return false;
+                }
+            });
+           /* message.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    if(b){
+                        message.setHint("");
+                    }else{
+                        message.setHint(getString(R.string.contactMessage));
+                    }
+                }
+            });*/
             Button button = (Button)v.findViewById(R.id.button);
             // button.setBackgroundColor(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.colorTop);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -180,6 +239,25 @@ public class FirstFragmentContact extends Fragment{
                 button.setBackgroundColor(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.colorTop);
             }
 
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(message.getText().toString().equals("")){
+                        showAlertDialog(getString(R.string.contactMessage));
+                    }
+                    else{
+                        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                        emailIntent.setType("message/rfc822");
+                        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{contact.email});
+                        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,getString(R.string.app_name) + " - " + contact.role);
+                        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, message.getText().toString());
+                        if(emailIntent.resolveActivity(getActivity().getPackageManager()) != null){
+                            startActivity(emailIntent);
+                        }
+                    }
+
+                }
+            });
 
             floatingActionButton_call.setBackgroundTintList(ColorStateList.valueOf(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.colorTop));
             floatingActionButton_room.setBackgroundTintList(ColorStateList.valueOf(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.colorTop));
@@ -191,7 +269,105 @@ public class FirstFragmentContact extends Fragment{
         this.contactInfoTextView = (TextView) findViewById(R.id.contact_info);
         this.messageEditText = (EditText) findViewById(R.id.contact_msg_edittext);*/
 
+            floatingActionButton_room.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(contact!=null){
+                        if(contact.address.equals("")){
+                            showAlertDialog(getString(R.string.emptyAddress_contact));
+                        }
+                        else{
+                            String uri = "geo:0,0?q=" + contact.address + "," + contact.city + " " + contact.zip;
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                            if(intent.resolveActivity(getActivity().getPackageManager()) != null){
+                                if(intent.setPackage("com.google.android.apps.maps")!=null){
+                                    startActivity(intent);
+                                }else{
+                                    startActivity( new Intent(Intent.ACTION_VIEW,Uri.parse("market://details?id=" + "com.google.android.apps.maps")));
+                                }
+                            }
+                        }
 
+
+                    }
+                }
+            });
+
+            floatingActionButton_call.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(contact !=null ){
+                        System.out.println("telephone--> " + contact.telephone);
+                        if(!contact.telephone.contains("0123456789")){
+                            AlertDialogFragment dialogFragment = AlertDialogFragment.newInstance(contact.telephone);
+                            dialogFragment.show(getActivity().getSupportFragmentManager(), "dialog");
+                        }
+                        else{
+                            showAlertDialog(getString(R.string.emptyPhone_contact));
+                        }
+
+
+
+                       /* new AlertDialog.Builder(getActivity().getApplicationContext())
+                                .setMessage(contact.telephone)
+                                .setPositiveButton(getString(R.string.call), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent callIntent =new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contact.telephone, null));
+                                        startActivity(callIntent);
+                                    }
+                                })
+                                .setNegativeButton(getString(R.string.call_abort), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();*/
+                    }
+                }
+            });
+
+            floatingActionButton_earth.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(contact != null){
+                        if(contact.url.equals("")){
+                            showAlertDialog(getString(R.string.emptyUrl_contact));
+                        }
+                        else{
+                            Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse("http://"+contact.url));
+                            System.out.println("parsed web: " + Uri.parse(contact.url));
+                            if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                                startActivity(intent);
+                            }
+                        }
+
+                    }
+
+                }
+            });
+
+            floatingActionButton_email.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(contact != null){
+                        if(contact.email.equals("")){
+                            showAlertDialog(getString(R.string.emptyEmail_contact));
+                        }
+                        else{
+                            Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                            emailIntent.setType("message/rfc822");
+                            emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{contact.email});
+                            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,getString(R.string.app_name) + " - " + contact.role);
+                            if(emailIntent.resolveActivity(getActivity().getPackageManager()) != null){
+                                startActivity(emailIntent);
+                            }
+                        }
+                    }
+
+
+                }
+            });
             this.avatarImageView = (ImageView)v.findViewById(R.id.contact_avatar);
             this.scheduleTitle = (TextView)v.findViewById(R.id.schedule);
             this.scheduleContact = (TextView)v.findViewById(R.id.scheduleContact);
@@ -201,9 +377,9 @@ public class FirstFragmentContact extends Fragment{
             //Button buttonSend = (Button) findViewById(R.id.button_send);
             //buttonSend.setBackgroundColor(colorTop);
 
-            progressDialog = ProgressDialog.show(getContext(), getString(R.string.app_name), getString(R.string.please_wait), true);
+           // progressDialog = ProgressDialog.show(getContext(), getString(R.string.app_name), getString(R.string.please_wait), true);
 
-            RequestParams requestParams = new RequestParams();
+           // RequestParams requestParams = new RequestParams();
 
         /*if(apiUrlString==null || apiUrlString.equals("")){
 
@@ -217,8 +393,8 @@ public class FirstFragmentContact extends Fragment{
             httpClient.setEnableRedirects(true);
             httpClient.get(endPoint,requestParams,new ResponseHandlerJson());
         }*/
-            requestParams.add("access_token", Lindau.getInstance().getCurrentSessionUser().accessToken);
-            LDConnection.get("getContact", requestParams, new ResponseHandlerJson());
+           // requestParams.add("access_token", Lindau.getInstance().getCurrentSessionUser().accessToken);
+           // LDConnection.get("getContact", requestParams, new ResponseHandlerJson());
 
 
 
@@ -241,18 +417,20 @@ public class FirstFragmentContact extends Fragment{
 
 
 
-
+            setOutlets();
             return v;
         }
 
-        public static FirstFragmentContact newInstance(String name, String api) {
+        public static FirstFragmentContact newInstance(String name, String api,String contacts,int pos) {
 
             FirstFragmentContact f = new FirstFragmentContact();
             Bundle b = new Bundle();
             b.putString("api", api);
             b.putString("name", name);
-
+            b.putString("contacts",contacts);
+            b.putInt("contactPosition",pos);
             f.setArguments(b);
+
 
             return f;
         }
@@ -264,7 +442,7 @@ public class FirstFragmentContact extends Fragment{
 
     private void showAlertDialog(String msg)
     {
-        new AlertDialog.Builder(getActivity().getApplicationContext())
+        new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.app_name)
                 .setMessage(msg)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener()
@@ -276,6 +454,7 @@ public class FirstFragmentContact extends Fragment{
 
     private void setOutlets()
     {
+
 
 
         this.companyTextView.setText(this.contact.company);
@@ -431,4 +610,81 @@ public class FirstFragmentContact extends Fragment{
             return false;
         }
     }
+
+
+    /*public static class Fragment1 extends DialogFragment {
+
+        private static LDContact contact;
+            public static Fragment1 newInstance(LDContact ldc){
+                contact = ldc;
+            Fragment1 fragment = new Fragment1();
+
+            return fragment;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity())
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setTitle(contact.telephone)
+                    .setPositiveButton(getString(R.string.call), new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO Auto-generated method stub
+                            Intent callIntent =new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", contact.telephone, null));
+                            startActivity(callIntent);
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.call_abort), new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO Auto-generated method stub
+                            dialog.dismiss();
+                        }
+                    })
+                    .create();
+        }
+    }*/
+    public static class AlertDialogFragment extends DialogFragment {
+
+        public static AlertDialogFragment newInstance(String telephone) {
+            AlertDialogFragment frag = new AlertDialogFragment();
+            Bundle args = new Bundle();
+            args.putString("tel", telephone);
+            frag.setArguments(args);
+            return frag;
+        }
+
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final String telephone = getArguments().getString("tel");
+            return new AlertDialog.Builder(getActivity())
+                    .setIcon(R.mipmap.ic_launcher)
+                    .setTitle(telephone)
+                    .setPositiveButton(R.string.call,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    Intent intent =new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", telephone, null));
+                                    if(intent.resolveActivity(getActivity().getPackageManager()) != null){
+                                        startActivity(intent);
+                                    }
+
+                                }
+                            }
+                    )
+                    .setNegativeButton(R.string.call_abort,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    dialog.dismiss();
+                                }
+                            }
+                    )
+                    .create();
+        }
+    }
 }
+
+

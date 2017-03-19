@@ -89,7 +89,6 @@ public class ContactActivity extends BaseActivity
        ViewPagerAdapter adapter = new ViewPagerAdapter(
                 getSupportFragmentManager());
         adapter.addFragment(FirstFragmentContact.newInstance("FirstFragment, Instance 1"));
-        adapter.addFragment(SecondFragmentContact.newInstance("SecondFragment, Instance 1"));
         pager.setAdapter(adapter);
 */
        /* ViewPager pager = (ViewPager) findViewById(R.id.pager);
@@ -218,7 +217,6 @@ public class ContactActivity extends BaseActivity
             switch(pos) {
 
                 case 0: return FirstFragmentContact.newInstance("FirstFragment, Instance 1");
-                case 1: return SecondFragmentContact.newInstance("SecondFragment, Instance 1");
                 case 2: return ThirdFragment.newInstance("ThirdFragment, Instance 1");
                 case 3: return ThirdFragment.newInstance("ThirdFragment, Instance 2");
                 case 4: return ThirdFragment.newInstance("ThirdFragment, Instance 3");

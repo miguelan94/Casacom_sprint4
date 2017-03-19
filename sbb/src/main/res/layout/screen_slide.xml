@@ -17,10 +17,10 @@
         android:id="@+id/tabDots"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         app:tabBackground="@drawable/tab_selector"
         app:tabGravity="center"
         app:tabIndicatorHeight="0dp"
         android:background="#EFEFF0"
-        android:elevation="0dp" />
+        android:paddingBottom="5dp" />
 </RelativeLayout>

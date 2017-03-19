@@ -1,5 +1,8 @@
 package com.streamnow.sbb.activities;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,8 +23,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.streamnow.sbb.R;
+import com.streamnow.sbb.datamodel.LDContact;
+import com.streamnow.sbb.lib.LDConnection;
 import com.streamnow.sbb.utils.Lindau;
+
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by migue on 14/03/2017.
@@ -33,10 +46,15 @@ public class ScreenSlidePageFragment extends FragmentActivity {
     String name_service;
     String apiUrl;
     ViewPager pager;
+    ProgressDialog progressDialog;
+    String contacts;
+    int contactSize;
+    TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("on create");
         setContentView(R.layout.screen_slide_activity);
       //  intent.putExtra("name_service",service.name);
         //intent.putExtra("api_url", service.apiUrl);
@@ -60,9 +78,9 @@ public class ScreenSlidePageFragment extends FragmentActivity {
         apiUrl = getIntent().getStringExtra("api_url");
 
         pager = (ViewPager) findViewById(R.id.pagerView);
-        pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabDots);
-        tabLayout.setupWithViewPager(pager);
+        tabLayout = (TabLayout) findViewById(R.id.tabDots);
+
+
         LinearLayout bgnd = (LinearLayout)findViewById(R.id.bar_bgnd);
         ImageView imageView = (ImageView) findViewById(R.id.contact_bgnd_image);
         TextView nameService_textView = (TextView)findViewById(R.id.name_service);
@@ -94,7 +112,10 @@ public class ScreenSlidePageFragment extends FragmentActivity {
                 finish();
             }
         });
-
+        progressDialog = ProgressDialog.show(this, getString(R.string.app_name), getString(R.string.please_wait), true);
+        RequestParams requestParams = new RequestParams();
+        requestParams.add("access_token", Lindau.getInstance().getCurrentSessionUser().accessToken);
+        LDConnection.get("getContact", requestParams, new ScreenSlidePageFragment.ResponseHandlerJson());
 
 
     }
@@ -107,19 +128,20 @@ public class ScreenSlidePageFragment extends FragmentActivity {
 
         @Override
         public Fragment getItem(int pos) {
-            switch(pos) {
+            return FirstFragmentContact.newInstance(name_service,apiUrl,contacts,pos);
+           /* switch(pos) {
 
-                case 0: return FirstFragmentContact.newInstance(name_service,apiUrl);
-                case 1: return SecondFragmentContact.newInstance("SecondFragment, Instance 1");
-
-                default: return FirstFragmentContact.newInstance(name_service,apiUrl);
-            }
+                case 0: return FirstFragmentContact.newInstance(name_service,apiUrl,contacts,pos);
+                case 1: return FirstFragmentContact.newInstance(name_service,apiUrl,contacts,pos);
+                default: return FirstFragmentContact.newInstance(name_service,apiUrl,contacts,0);
+            }*/
         }
 
         @Override
         public int getCount() {
-            return 1;
+            return contactSize;
         }
+
     }
 
     @Override
@@ -168,4 +190,74 @@ public class ScreenSlidePageFragment extends FragmentActivity {
 
         return rootView;
     }*/
+
+
+
+
+
+
+
+
+    private void showAlertDialog(String msg)
+    {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.app_name)
+                .setMessage(msg)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which) {}
+                })
+                .show();
+    }
+
+
+
+
+    private class ResponseHandlerJson extends JsonHttpResponseHandler
+    {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, JSONObject response)
+        {
+            try
+            {
+                System.out.println("Contact---> " + response.toString());
+                if( response.getString("status").equals("ok") )
+                {
+                    contactSize = LDContact.contactsFromArray(response.getJSONArray("contacts")).size();
+                    contacts = response.toString();
+
+                    pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+                    tabLayout.setupWithViewPager(pager);
+                    pager.getAdapter().notifyDataSetChanged();
+                }
+                else
+                {
+                    showAlertDialog(getString(R.string.network_error));
+                }
+            }
+            catch( Exception e )
+            {
+                e.printStackTrace();
+                showAlertDialog(getString(R.string.network_error));
+            }
+            progressDialog.dismiss();
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable)
+        {
+            showAlertDialog(getString(R.string.network_error));
+            System.out.println("getContact onFailure throwable: " + throwable.toString() + " status code = " + statusCode);
+            progressDialog.dismiss();
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse)
+        {
+            showAlertDialog(getString(R.string.network_error));
+            System.out.println("getContact onFailure json");
+            progressDialog.dismiss();
+        }
+    }
+
 }
