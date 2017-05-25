@@ -31,6 +31,7 @@ public class LDPartner {
     public int backgroundColorIconSmartphone;
     public int lineColorSmartphone;
     public String smartphoneAppName;
+    public String id;
 
     public LDPartner(JSONObject o) {
         Lindau ld = Lindau.getInstance();
@@ -69,6 +70,7 @@ public class LDPartner {
                 this.backgroundSmartphoneImage = o.getString("background_smartphone_image");
             if (!o.isNull("smartphone_app_name"))
                 this.smartphoneAppName = o.getString("smartphone_app_name");
+            if (!o.isNull("id")) this.id = o.getString("id");
 
         } catch (Exception e) {
             e.printStackTrace();

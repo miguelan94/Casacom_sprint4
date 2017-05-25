@@ -1,5 +1,6 @@
 package com.streamnow.europaallee.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -7,7 +8,9 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.net.MailTo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +20,9 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
@@ -53,17 +59,43 @@ public class WebViewActivity extends BaseActivity
         Configuration config = new Configuration();
         config.locale = locale;
         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+        setContentView(R.layout.activity_web_view);
 
-        String webUrlString = getIntent().getStringExtra("web_url");
+        final String webUrlString = getIntent().getStringExtra("web_url");
         String serviceId = getIntent().getStringExtra("service_id");
         String serviceName = getIntent().getStringExtra("service_name");
-
+        String serviceType = getIntent().getStringExtra("type");
         if( webUrlString == null || webUrlString.equals("") )
         {
             finish();
         }
 
-        setContentView(R.layout.activity_web_view);
+
+
+        ImageView shareIcon = (ImageView)findViewById(R.id.share_icon);
+        shareIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, webUrlString);
+                startActivity(intent);
+            }
+        });
+        if(getIntent().getStringExtra("type")!=null && !getIntent().getStringExtra("type").equals("")){
+            if(serviceType.equalsIgnoreCase("document")){
+                shareIcon.setVisibility(View.VISIBLE);
+                shareIcon.setColorFilter(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.fontColorSmartphone);
+            }
+            else{
+                shareIcon.setVisibility(View.GONE);
+            }
+        }
+        else{
+            shareIcon.setVisibility(View.GONE);
+        }
+
+
 
         LinearLayout bgnd = (LinearLayout)findViewById(R.id.bar_bgnd);
         ImageView imageView = (ImageView) findViewById(R.id.bgnd_image);
@@ -153,7 +185,23 @@ public class WebViewActivity extends BaseActivity
             public boolean shouldOverrideUrlLoading(WebView view, String url)
             {
                 Log.i(TAG, "Processing webview url click...");
+                if (url.contains("tel:")) {
+                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(url)));
+                    return true;
+                }
+                else if(url.contains("mailto:")){
+                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                    System.out.println("url: ----> " + url);
 
+                    MailTo mail = MailTo.parse(url);
+                    System.out.println("mail: ----> " + mail.toString());
+                    emailIntent.setType("message/rfc822");
+                    emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,new String [] {mail.getTo()});
+                    if(emailIntent.resolveActivity(WebViewActivity.this.getPackageManager()) != null) {
+                        startActivity(emailIntent);
+                        return true;
+                    }
+                }
                 view.loadUrl(url);
                 return true;
             }
@@ -167,6 +215,8 @@ public class WebViewActivity extends BaseActivity
                     progressDialog.dismiss();
                 }
             }
+
+
 
 
         });
@@ -187,7 +237,12 @@ public class WebViewActivity extends BaseActivity
             //webView.loadUrl("file:///android_asset/fullscreen.html");
 
 
-        }else{
+        }else if(serviceType!=null && serviceType.equalsIgnoreCase("getTerms")){
+            System.out.println("getTerms");
+            this.webView.getSettings().setTextSize(WebSettings.TextSize.LARGEST);
+            webView.loadData(webUrlString,"text/html; charset=utf-8", "UTF-8");
+        }
+        else {
 
             webView.loadUrl(webUrlString);
         }

@@ -48,7 +48,7 @@ public class LDSessionUser {
         if (categoryIdInt != 0) {
             for (int i = 0; i < this.availableServices.size(); i++) {
                 LDService service = this.availableServices.get(i);
-                if (service.categoryId == categoryIdInt && service.usable) {
+                if (service.categoryId == categoryIdInt && service.usable && (!service.type.equals("4") && !service.type.equals("7"))) {
                     retArray.add(service);
                 }
             }
@@ -58,15 +58,13 @@ public class LDSessionUser {
 
     public ArrayList<? extends IMenuPrintable> getAvailableServicesForSession() {
         ArrayList<IMenuPrintable> retArray = new ArrayList<>();
-        System.out.println("SIZE--------------------> " + this.availableServices.size());
         for (int i = 0; i < this.availableServices.size(); i++) {
             LDService service = this.availableServices.get(i);
             if (service.categoryId == 0 && service.active.equals("1") && service.availableInApp.equals("1") &&
-                    service.usable && (service.deviceType.equals("2") || service.deviceType.equals("3"))) {
+                    service.usable && (service.deviceType.equals("2") || service.deviceType.equals("3")) && (!service.type.equals("4") && !service.type.equals("7"))) {
                 retArray.add(service);
             }
         }
-        System.out.println("SIZE categories--------------------> " + this.categories.size());
         retArray.addAll(this.categories);
 
         return retArray;

@@ -38,10 +38,6 @@
             android:label="@string/title_activity_web_view"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.ContactActivity"
-            android:label="@string/title_activity_contact"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".activities.DocmanMenuActivity"
             android:label="@string/title_activity_docman_menu"
             android:theme="@style/AppTheme.NoActionBar" />

@@ -27,7 +27,7 @@ import cz.msebera.android.httpclient.Header;
  */
 public class RegistrationIntentService extends IntentService {
 
-    private static String SENDER_ID = "628699941893";
+    private static String SENDER_ID = "782670365451";
     private String token;
     private Handler handler;
     public RegistrationIntentService(){
@@ -67,26 +67,22 @@ public class RegistrationIntentService extends IntentService {
             LDConnection.get("/setDeviceToken", requestParams, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    try {
                         Log.i("Log", "response-->" + response.toString());
-                        if (response.getString("status").equalsIgnoreCase("ok")) {
-
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
+
                     System.out.println("onFailure throwable: " + throwable.toString() + " status code = " + statusCode);
 
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    System.out.println("onFailure json" + errorResponse.toString());
+                    if(errorResponse != null){
+                        System.out.println("onFailure json" + errorResponse.toString());
+                    }
+
 
                 }
             });
@@ -122,7 +118,10 @@ public class RegistrationIntentService extends IntentService {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse)
             {
-                System.out.println("push notifications onFailure json" + errorResponse.toString());
+                if(errorResponse != null){
+                    System.out.println("push notifications onFailure json" + errorResponse.toString());
+                }
+
             }
         });
 

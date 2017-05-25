@@ -173,6 +173,7 @@ public class    MenuActivity extends BaseActivity {
             services = sessionUser.getAvailableServicesForCategoryId(categoryId);
             final LDService service = (LDService) services.get(position);
             switch (service.type) {
+
                 case "2": {
                     if (categoryId.equals("5")) {
                         System.out.println("AppID: " + service.secretId + " user: " + getIntent().getStringExtra("user_vodka") + " pass: " + getIntent().getStringExtra("pass_vodka"));
@@ -266,7 +267,7 @@ public class    MenuActivity extends BaseActivity {
                 case "1": {
 
 
-                        /*if (service.id.equals("22")) {//events
+                        if (service.id.equals("22")) {//events
                             Intent i = new Intent(this, EventActivity.class);
                             startActivity(i);
                         } else if (service.id.equals("53") || service.id.equals("20")) {
@@ -278,7 +279,7 @@ public class    MenuActivity extends BaseActivity {
                             intent.putExtra("root_menu", true);
                             intent.putExtras(new Bundle());
                             startActivity(intent);
-                        }*/
+                        }
                     break;
                 }
                 case "8": {
@@ -391,13 +392,15 @@ public class    MenuActivity extends BaseActivity {
 
             System.out.println("clicked on item with title " + sessionUser.categories.get(position).name + " it has " + services.size() + " services available");
 
+
             if (services.size() == 1) {
 
                 LDService service = (LDService) services.get(0);
+                System.out.println("service type: " + service.type);
                 //check service type
                 switch (service.type) {
                     case "1":
-                            /*if (service.id.equals("53") || service.id.equals("20")) {
+                            if (service.id.equals("53") || service.id.equals("20")) {
                                 Intent intent = new Intent(this, ContactActivity.class);
                                 intent.putExtra("api_url", service.apiUrl);
                                 startActivity(intent);
@@ -406,7 +409,7 @@ public class    MenuActivity extends BaseActivity {
                                 intent.putExtra("root_menu", true);
                                 intent.putExtras(new Bundle());
                                 startActivity(intent);
-                            }*/
+                            }
                         break;
                     case "2": {
                         Intent intent = new Intent(this, WebViewActivity.class);

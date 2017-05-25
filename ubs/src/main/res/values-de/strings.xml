@@ -21,7 +21,7 @@
     <string name="support">Unterstützen</string>
     <string name="general_docs">Allgemeine Dokumente</string>
     <string name="personal_docs">Persönliche Dokumente</string>
-    <string name="no_docs_available">Keine Dokumente verfügbar</string>
+    <string name="no_docs_available">Keine Dokumente</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="profile">Profil</string>
     <string name="contacts">Kontakte</string>
@@ -49,4 +49,11 @@
     <string name="call">Anruf</string>
     <string name="call_abort">Abbrechen</string>
     <string name="login_failure">Es gibt ein Problem mit dem Service. Bitte kontaktieren Sie uns.</string>
+    <string name="terms">Allgemeine Geschfätsbedingungen</string>
+    <string name="contactMessage">Geben Sie eine Nachricht ein</string>
+    <string name="emptyEmail_contact">Nicht definierte E-Mail</string>
+    <string name="emptyUrl_contact">Nicht definierte URL</string>
+    <string name="emptyPhone_contact">Nicht definierte Nummer</string>
+    <string name="emptyAddress_contact">Nicht definierte Adresse</string>
+    <string name="termsNotAccepted">Sie haben die AGB nicht akzeptiert, so dass Sie sich nicht anmelden können.</string>
 </resources>

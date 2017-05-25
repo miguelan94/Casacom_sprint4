@@ -30,6 +30,18 @@
             android:layout_gravity="left|center_vertical"
             android:layout_marginLeft="14dp"
             android:padding="6dp" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/profile_title"
+            android:layout_gravity="center" />
+        </LinearLayout>
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

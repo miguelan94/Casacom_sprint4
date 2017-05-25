@@ -7,4 +7,5 @@
     <color name="loginButtonPressed">#1C630D</color>
     <color name="switchLogged">#f1f1f1</color>
     <color name="colorBP">#FF0001</color>
+    <color name="white">#FFFFFF</color>
 </resources>

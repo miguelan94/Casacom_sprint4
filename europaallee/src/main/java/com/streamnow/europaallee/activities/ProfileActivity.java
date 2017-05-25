@@ -45,6 +45,7 @@ public class ProfileActivity extends BaseActivity {
         backView.setBackgroundColor(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.backgroundColorSmartphone);
         TextView profile_title = (TextView)findViewById(R.id.profile_title);
         profile_title.setText(R.string.profile);
+
         TextView name_title = (TextView)findViewById(R.id.name_title);
         name_title.setText(R.string.profile_name);
         TextView lastname_title = (TextView)findViewById(R.id.lastname_title);
@@ -56,7 +57,7 @@ public class ProfileActivity extends BaseActivity {
         TextView telephone_title = (TextView)findViewById(R.id.telephone_title);
         telephone_title.setText(R.string.profile_telephone);
 
-        ImageView imageView = (ImageView) findViewById(R.id.profile_avatar);
+
         EditText name_data = (EditText)findViewById(R.id.name_data);
         EditText lastname_data = (EditText)findViewById(R.id.lastname_data);
         EditText mobile_data = (EditText)findViewById(R.id.mobile_data);
@@ -68,6 +69,7 @@ public class ProfileActivity extends BaseActivity {
         telephone_data.setKeyListener(null);
         email_data.setKeyListener(null);
 
+        ImageView imageView = (ImageView) findViewById(R.id.profile_avatar);
         Picasso.with(this)
                 .load(sessionUser.userInfo.image)
                 .placeholder(R.drawable.contact_placeholder)

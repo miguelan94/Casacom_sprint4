@@ -33,12 +33,13 @@ public class LDPartner
     public int barButtonColor;
     public String barButtonText;
     public String barButtonUrl;
-
+    public String id;
     public LDPartner(JSONObject o)
     {
         Lindau ld = Lindau.getInstance();
         try
         {
+
             if(!o.isNull("font_color_top") && !o.getString("font_color_top").equals("")) this.fontColorTop = ld.colorFromRGBAString(o.getString("font_color_top"));
             if(!o.isNull("font_color_service") && !o.getString("font_color_service").equals("") ) this.fontColorService = ld.colorFromRGBAString(o.getString("font_color_service"));
             if(!o.isNull("font_color_bottom") && !o.getString("font_color_bottom").equals("")) this.fontColorBottom = ld.colorFromRGBAString(o.getString("font_color_bottom"));
@@ -61,9 +62,13 @@ public class LDPartner
             if(!o.isNull("line_color_smartphone") && !o.getString("line_color_smartphone").equals(""))this.lineColorSmartphone = ld.colorFromRGBAString(o.getString("line_color_smartphone"));
             if(!o.isNull("background_smartphone_image")) this.backgroundSmartphoneImage = o.getString("background_smartphone_image");
             if(!o.isNull("smartphone_app_name")) this.smartphoneAppName = o.getString("smartphone_app_name");
-            if  (!o.isNull("bar_button"))
+            if (!o.isNull("id")) this.id = o.getString("id");
+            if  (!o.isNull("bar_button")){
                 barButton = o.getString("bar_button");
-            buttonBar(o.getJSONObject("bar_button"));
+                buttonBar(o.getJSONObject("bar_button"));
+            }
+
+
 
         }
         catch (Exception e)

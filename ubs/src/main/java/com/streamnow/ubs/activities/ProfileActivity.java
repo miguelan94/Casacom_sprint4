@@ -41,10 +41,11 @@ public class ProfileActivity extends BaseActivity {
             }
         });
 
-        View backView = findViewById(R.id.profile_view_bgnd);
-        backView.setBackgroundColor(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.backgroundColorSmartphone);
+      //  View backView = findViewById(R.id.profile_view_bgnd);
+        //backView.setBackgroundColor(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.backgroundColorSmartphone);
         TextView profile_title = (TextView) findViewById(R.id.profile_title);
         profile_title.setText(R.string.profile);
+        profile_title.setTextColor(Lindau.getInstance().getCurrentSessionUser().userInfo.partner.fontColorSmartphone);
         TextView name_title = (TextView) findViewById(R.id.name_title);
         name_title.setText(R.string.profile_name);
         TextView lastname_title = (TextView) findViewById(R.id.lastname_title);

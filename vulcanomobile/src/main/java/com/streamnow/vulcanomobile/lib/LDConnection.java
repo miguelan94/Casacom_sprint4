@@ -7,7 +7,7 @@ import com.loopj.android.http.*;
  */
 public class LDConnection
 {
-    private static final String BASE_URL_STRING = "http://route.livingservices.com/";
+    private static final String BASE_URL_STRING = "https://route.streamnow.ch/";
     //private static final String BASE_URL_STRING = "http://route.streamnow.ch/";
     private static String _currentUrlString = null;
 

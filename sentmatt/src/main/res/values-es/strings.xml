@@ -48,4 +48,17 @@
     <string name="switch_loggued">Permanecer conectado</string>
     <string name="call">Llamar</string>
     <string name="call_abort">Cancelar</string>
+    <string name="shopping_error">No ha sido posible activar su nuevo servicio. Por favor, inténtelo más tarde</string>
+    <string name="shopping_confirm">¿Estás seguro que quieres comprar el servicio?</string>
+    <string name="buy">Comprar</string>
+    <string name="service_not_activated">Servicio no activado</string>
+    <string name="service_activated">Service activado</string>
+    <string name="terms">Términos y condiciones</string>
+    <string name="termsNotAccepted">No has aceptado los términos y condiciones, por lo que no puedes iniciar sesión.</string>
+    <string name="login_failure">Hay un problema con el servicio. Por favor, contáctenos</string>
+    <string name="contactMessage">Escriba un mensaje</string>
+    <string name="emptyEmail_contact">Correo electrónico no definido</string>
+    <string name="emptyUrl_contact">URL no definida</string>
+    <string name="emptyPhone_contact">Número no definido</string>
+    <string name="emptyAddress_contact">Dirección no definida</string>
 </resources>

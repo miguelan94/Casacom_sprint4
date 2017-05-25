@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.streamnow.ubs.activities.ContactActivity"
+
     android:id="@+id/contact_view_bgnd">
 
     <include layout="@layout/content_contact"/>

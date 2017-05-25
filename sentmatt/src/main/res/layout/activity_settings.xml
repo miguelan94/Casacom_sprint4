@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:theme="@style/AppTheme"
-    tools:context="com.streamnow.sentmattmobile.activities.SettingsActivity">
+    tools:context="com.streamnow.sentmatt.activities.SettingsActivity">
 
     <include layout="@layout/content_settings" />
 

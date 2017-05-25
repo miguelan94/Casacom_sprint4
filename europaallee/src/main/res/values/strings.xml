@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Europaallee</string>
-    <string name="versionDate" translatable="false">10.03.2017</string>
+    <string name="app_name" translatable="false">Mieter@H </string>
+    <string name="versionDate" translatable="false">May 2017</string>
     <string name="action_settings">Settings</string>
     <string name="password_hint">Password</string>
     <string name="username_hint">Username</string>
-    <string name="login_button_title1">Enter Without Login</string>
+    <string name="login_button_title1">Guest</string>
     <string name="reset_button_title">Reset Password</string>
     <string name="login_button_title2">Login</string>
     <string name="please_wait">Please, wait...</string>
@@ -50,4 +50,25 @@
     <string name="switch_loggued">Stay Logged</string>
     <string name="call">Call</string>
     <string name="call_abort">Cancel</string>
+    <string name="contactMessage">Type a message</string>
+    <string name="emptyEmail_contact">Email not defined</string>
+    <string name="emptyUrl_contact">URL not defined</string>
+    <string name="emptyPhone_contact">Number not defined</string>
+    <string name="emptyAddress_contact">Address not defined</string>
+    <string name="terms">Terms and Conditions</string>
+    <string name="shopping_error">It was not possible to activate your new service. Please try again later</string>
+    <string name="shopping_confirm">Are you sure want to buy this service?</string>
+    <string name="buy">Buy</string>
+    <string name="service_not_activated">Service not activated</string>
+    <string name="service_activated">Service activated</string>
+    <item name="TAGService" type="string">service</item>
+    <string name="login_failure">There is a problem with the service. Please contact us.</string>
+    <string name="termsNotAccepted">You have not accepted the terms and conditions, so you can\'t log in.</string>
+
+
+    <integer-array name="img_id_arr">
+        <item>@drawable/selector</item>
+        <item>@drawable/selector</item>
+        <item>@drawable/selector</item>
+    </integer-array>
 </resources>

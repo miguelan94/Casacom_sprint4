@@ -12,11 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -32,12 +28,10 @@ import com.streamnow.sbb.utils.Lindau;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 import cz.msebera.android.httpclient.Header;
 
 /**
- * Created by migue on 14/03/2017.
+ * Created by miguel on 14/03/2017.
  */
 
 public class ScreenSlidePageFragment extends FragmentActivity {
@@ -128,12 +122,12 @@ public class ScreenSlidePageFragment extends FragmentActivity {
 
         @Override
         public Fragment getItem(int pos) {
-            return FirstFragmentContact.newInstance(name_service,apiUrl,contacts,pos);
+            return ContactFragment.newInstance(name_service,apiUrl,contacts,pos);
            /* switch(pos) {
 
-                case 0: return FirstFragmentContact.newInstance(name_service,apiUrl,contacts,pos);
-                case 1: return FirstFragmentContact.newInstance(name_service,apiUrl,contacts,pos);
-                default: return FirstFragmentContact.newInstance(name_service,apiUrl,contacts,0);
+                case 0: return ContactFragment.newInstance(name_service,apiUrl,contacts,pos);
+                case 1: return ContactFragment.newInstance(name_service,apiUrl,contacts,pos);
+                default: return ContactFragment.newInstance(name_service,apiUrl,contacts,0);
             }*/
         }
 

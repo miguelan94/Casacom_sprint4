@@ -46,4 +46,19 @@
     <string name="no_entertainment_avaliable">Questa funzionalità non funziona con Android 5.x</string>
     <string name="select_BP">Selezionare</string>
     <string name="switch_loggued">Mantenere il login</string>
+    <string name="call">Chiamare</string>
+    <string name="call_abort">Cancellare</string>
+    <string name="shopping_error">Non è stato possibile attivare il nuovo servizio. Per favore riprova più tardi</string>
+    <string name="shopping_confirm">Sei sicuro di voler comprare questo servizio?</string>
+    <string name="buy">Comprare</string>
+    <string name="service_not_activated">Servizio non attivo</string>
+    <string name="service_activated">Servizio attivato</string>
+    <string name="terms">Termini e condizioni</string>
+    <string name="login_failure">There is a problem with the service. Please contact us.</string>
+    <string name="termsNotAccepted">You have not accepted the terms and conditions, so you can\'t log in.</string>
+    <string name="contactMessage">Scrivi un messaggio</string>
+    <string name="emptyEmail_contact">E-mail non definito</string>
+    <string name="emptyUrl_contact">URL non definito</string>
+    <string name="emptyPhone_contact">Numero non definito</string>
+    <string name="emptyAddress_contact">Indirizzo non definito</string>
 </resources>

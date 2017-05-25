@@ -23,7 +23,7 @@
     <string name="support">Support</string>
     <string name="general_docs">General Documents</string>
     <string name="personal_docs">Personal Documents</string>
-    <string name="no_docs_available">No documents available</string>
+    <string name="no_docs_available">No available documents</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="profile">Profile</string>
     <string name="contacts">Contacts</string>
@@ -51,4 +51,11 @@
     <string name="call">Call</string>
     <string name="call_abort">Cancel</string>
     <string name="login_failure">There is a problem with the service. Please contact us.</string>
+    <string name="terms">Terms and Conditions</string>
+    <string name="contactMessage">Type a message</string>
+    <string name="emptyEmail_contact">Email not defined</string>
+    <string name="emptyUrl_contact">URL not defined</string>
+    <string name="emptyPhone_contact">Number not defined</string>
+    <string name="emptyAddress_contact">Address not defined</string>
+    <string name="termsNotAccepted">You have not accepted the terms and conditions, so you can\'t log in.</string>
 </resources>

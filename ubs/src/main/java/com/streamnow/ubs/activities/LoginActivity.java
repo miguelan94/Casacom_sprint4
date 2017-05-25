@@ -386,9 +386,27 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                System.out.println("login onFailure json " + throwable.toString());
-                progressDialog.dismiss();
-                showAlertDialog(getString(R.string.login_failure));
+                System.out.println("login onFailure json " + throwable.toString() + " response: " + errorResponse);
+
+
+                try {
+                    if(errorResponse.getString("msg").equalsIgnoreCase("Terms and policy are not accepted")){
+                        progressDialog.dismiss();
+                        showAlertDialog(getString(R.string.termsNotAccepted));
+                    }
+                    else{
+                        progressDialog.dismiss();
+                        showAlertDialog(getString(R.string.login_failure));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    progressDialog.dismiss();
+                    showAlertDialog(getString(R.string.login_failure));
+                } {
+
+                }
+
+
             }
         });
     }

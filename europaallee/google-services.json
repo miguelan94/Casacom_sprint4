@@ -1,20 +1,27 @@
 {
   "project_info": {
-    "project_number": "628699941893",
-    "project_id": "firebase-europaallee"
+    "project_number": "782670365451",
+    "firebase_url": "https://europaalle-73ef0.firebaseio.com",
+    "project_id": "europaalle-73ef0",
+    "storage_bucket": "europaalle-73ef0.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:628699941893:android:1cc10812a0cd1d39",
+        "mobilesdk_app_id": "1:782670365451:android:cbf4134175d11e79",
         "android_client_info": {
-          "package_name": "com.streamnow.europaallee"
+          "package_name": "com.streamnow.europaalletablet"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "782670365451-a5hsfqejh9v0152fbhjf4fepnu6njm8r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCHxJkOV7KYQYwIUTJyoKb9AprDcff1GD8"
+          "current_key": "AIzaSyDpuUbkma3HYypzYO7Vpys45BXlY4hUYvA"
         }
       ],
       "services": {
@@ -26,7 +33,38 @@
           "other_platform_oauth_client": []
         },
         "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782670365451:android:617d7c0a2e0de1ae",
+        "android_client_info": {
+          "package_name": "com.streamnow.europamobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "782670365451-a5hsfqejh9v0152fbhjf4fepnu6njm8r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpuUbkma3HYypzYO7Vpys45BXlY4hUYvA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
           "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
         }
       }
     }

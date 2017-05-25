@@ -93,12 +93,16 @@ public class SettingsAdapter extends BaseAdapter {
             imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.profile));
             textView.setText(items.get(position));
         }else if(position==1){
-            imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.logout));
-            textView.setText(items.get(position));
-        } else if(position==2){
             imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.buy));
             textView.setText(items.get(position));
+        } else if(position==2){
+            imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_terms));
+            textView.setText(items.get(position));
         } else if(position==3){
+            imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.logout));
+            textView.setText(items.get(position));
+        }
+        else if (position == 4){
             imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.contacts));
             textView.setText(items.get(position));
         }

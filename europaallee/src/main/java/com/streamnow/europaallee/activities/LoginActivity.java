@@ -15,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.security.KeyPairGeneratorSpec;
 import android.text.Editable;
@@ -266,6 +267,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener
     {
         progressDialog = ProgressDialog.show(this, getString(R.string.app_name), getString(R.string.please_wait), true);
 
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                dialog.dismiss();
+            }
+        });
         //if( LDConnection.isSetCurrentUrl() )
         //{
             //continueLogin();
@@ -449,7 +456,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 System.out.println("login onFailure json");
-                progressDialog.dismiss();
+                try {
+                    if(errorResponse.getString("msg").equalsIgnoreCase("Terms and policy are not accepted")){
+                        progressDialog.dismiss();
+                        showAlertDialog(getString(R.string.termsNotAccepted));
+                    }
+                    else{
+                        progressDialog.dismiss();
+                        showAlertDialog(getString(R.string.login_failure));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    progressDialog.dismiss();
+                    showAlertDialog(getString(R.string.login_failure));
+                }
+
             }
         });
     }

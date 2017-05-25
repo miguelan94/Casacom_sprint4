@@ -165,6 +165,7 @@ public class MenuActivity extends BaseActivity {
 
             services = sessionUser.getAvailableServicesForCategoryId(categoryId);
             final LDService service = (LDService) services.get(position);
+            System.out.println("serivce clicked : "  + service.type + " id: " + service.id);
             switch (service.type) {
                 case "2": {
                     Intent intent = new Intent(this, WebViewActivity.class);
@@ -200,6 +201,13 @@ public class MenuActivity extends BaseActivity {
                         }*/
                     break;
                 }
+                case "5": {
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", service.apiUrl);
+                    intent.putExtra("service_name",service.name);
+                    startActivity(intent);
+                    break;
+                }
                 case "8": {
                     Intent intent = getPackageManager().getLaunchIntentForPackage(service.webviewUrl);
                     if (intent != null) {
@@ -216,7 +224,7 @@ public class MenuActivity extends BaseActivity {
                     break;
                 }
                 case "9": {
-                    Intent intent = new Intent(this, ContactActivity.class);
+                    Intent intent = new Intent(this, ScreenSlidePageFragment.class);
                     intent.putExtra("api_url", service.apiUrl);
                     intent.putExtra("name_service",service.name);
                     startActivity(intent);
@@ -300,6 +308,116 @@ public class MenuActivity extends BaseActivity {
                             System.out.println("get token KO: " + throwable.toString() + " status code = " + statusCode + " responseString = " + response);
                         }
                     });
+                    break;
+                }
+                case "13":{
+                    RequestParams params = new RequestParams();
+                    params.add("access_token",sessionUser.accessToken);
+                    LDConnection.get("energylite/getLink",params,new JsonHttpResponseHandler(){
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            String url = null;
+
+                            try {
+                                System.out.println("OK--> " + response.toString());
+                                if(response.getString("status").equalsIgnoreCase("ok")){
+                                    url = response.getString("url");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            if(url!=null && !url.equals("")){
+                                Intent intent = new Intent(MenuActivity.this,WebViewActivity.class);
+                                intent.putExtra("web_url",url);
+                                intent.putExtra("service_name",service.name);
+                                startActivity(intent);
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            System.out.println("onFailure json" + errorResponse.toString());
+                        }
+
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
+                            System.out.println("onFailure json: " + throwable.toString() + " status code = " + statusCode + " responseString = " + response);
+                        }
+                    });
+                }
+                case "15" :{
+                    String email = sessionUser.userInfo.email;
+                    String pass = sessionUser.userInfo.id;
+                    String finalURL = service.webviewUrl + "email=" + email + "&password=" + pass;
+                    System.out.println("finalurl----> " + finalURL);
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", finalURL);
+                    intent.putExtra("service_name",service.name);
+                    startActivity(intent);
+                    break;
+                }
+
+                case "16" :{
+                    String finalURL = service.webviewUrl + "uid=" + sessionUser.userInfo.id;
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", finalURL);
+                    intent.putExtra("service_name",service.name);
+                    startActivity(intent);
+                    break;
+                }
+                case "17": {
+                    String finalURL = service.webviewUrl + "user=" + sessionUser.userInfo.email + "&password=" +sessionUser.userInfo.id;
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", finalURL);
+                    intent.putExtra("service_name",service.name);
+                    startActivity(intent);
+                    break;
+                }
+                case "18": {
+                    String finalURL = service.webviewUrl + "user=" + sessionUser.userInfo.id + "&password=" + sessionUser.userInfo.id;
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", finalURL);
+                    intent.putExtra("service_name",service.name);
+                    startActivity(intent);
+                    break;
+                }
+                case "19": {
+                    String finalURL = service.webviewUrl + "uid=" + sessionUser.userInfo.id;
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", finalURL);
+                    intent.putExtra("service_name",service.name);
+                    startActivity(intent);
+                    break;
+                }
+                case "20": {
+                    String finalURL = service.webviewUrl + "email=" + sessionUser.userInfo.email + "&password=" + sessionUser.userInfo.id;
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", finalURL);
+                    intent.putExtra("service_name",service.name);
+                    startActivity(intent);
+                    break;
+                }
+                case "21":{
+                    String finalURL = service.webviewUrl + "" + sessionUser.userInfo.language + "/home?uid=" + sessionUser.userInfo.id;
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", finalURL);
+                    intent.putExtra("service_name",service.name);
+                    startActivity(intent);
+                    //https://ticketplus-dev.streamnow.ch/de/home?uid=1047
+                    break;
+                }
+                case "22":{
+                    String finalURL = service.webviewUrl + "" + sessionUser.userInfo.language + "/home?uid=" + sessionUser.userInfo.id;
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", finalURL);
+                    intent.putExtra("service_name",service.name);
+                    System.out.println("URL " + finalURL);
+                    startActivity(intent);
+                    break;
                 }
             }
         } else {
@@ -309,7 +427,7 @@ public class MenuActivity extends BaseActivity {
 
             if (services.size() == 1) {
 
-                LDService service = (LDService) services.get(0);
+                final LDService service = (LDService) services.get(0);
                 //check service type
                 switch (service.type) {
                     case "1":
@@ -339,6 +457,13 @@ public class MenuActivity extends BaseActivity {
                         startActivity(intent);
                         break;
                     }
+                    case "5": {
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", service.apiUrl);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        break;
+                    }
                     case "8": {
                         Intent intent = getPackageManager().getLaunchIntentForPackage(service.webviewUrl);
                         if (intent != null) {
@@ -354,7 +479,7 @@ public class MenuActivity extends BaseActivity {
                         break;
                     }
                     case  "9": {
-                        Intent intent = new Intent(this, ContactActivity.class);
+                        Intent intent = new Intent(this, ScreenSlidePageFragment.class);
                         intent.putExtra("name_service",service.name);
                         intent.putExtra("api_url", service.apiUrl);
                         startActivity(intent);
@@ -372,6 +497,133 @@ public class MenuActivity extends BaseActivity {
                         Intent i = new Intent(this, EventActivity.class);
                         i.putExtra("name_service",service.name);
                         startActivity(i);
+                        break;
+                    }
+                    case "13":{
+                        RequestParams params = new RequestParams();
+                        System.out.println("service api " + service.apiUrl);
+                        params.add("access_token",sessionUser.accessToken);
+                        LDConnection.get("energylite/getLink",params,new JsonHttpResponseHandler(){
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                String url = null;
+
+                                try {
+                                    System.out.println("OK--> " + response.toString());
+                                    if(response.getString("status").equalsIgnoreCase("ok")){
+                                        url = response.getString("url");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                if(url!=null && !url.equals("")){
+
+                                    Intent intent = new Intent(MenuActivity.this,WebViewActivity.class);
+                                    intent.putExtra("web_url",url);
+                                    intent.putExtra("service_name",service.name);
+                                    startActivity(intent);
+
+
+                                  /*  System.out.println("URL: " + url);
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.setPackage("com.android.chrome");
+                                    try {
+                                        startActivity(intent);
+                                    } catch (ActivityNotFoundException e) {
+                                        // Chrome is probably not installed
+                                        intent.setPackage(null);
+                                        startActivity(intent);
+                                    }
+                                  */
+
+
+
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                System.out.println("onFailure json" + errorResponse.toString());
+                            }
+
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
+                                System.out.println("onFailure json: " + throwable.toString() + " status code = " + statusCode + " responseString = " + response);
+                            }
+                        });
+                        break;
+                    }
+                    case "15" :{
+                        String email = sessionUser.userInfo.email;
+                        String pass = sessionUser.userInfo.id;
+                        String finalURL = service.webviewUrl + "email=" + email + "&password=" + pass;
+                        System.out.println("finalurl----> " + finalURL);
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", finalURL);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        break;
+                    }
+
+                    case "16" :{
+                        String finalURL = service.webviewUrl + "uid=" + sessionUser.userInfo.id;
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", finalURL);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        break;
+                    }
+                    case "17": {
+                        String finalURL = service.webviewUrl + "user=" + sessionUser.userInfo.email + "&password=" +sessionUser.userInfo.id;
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", finalURL);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        break;
+                    }
+                    case "18": {
+                        String finalURL = service.webviewUrl + "user=" + sessionUser.userInfo.id + "&password=" + sessionUser.userInfo.id;
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", finalURL);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        break;
+                    }
+                    case "19": {
+                        String finalURL = service.webviewUrl + "uid=" + sessionUser.userInfo.id;
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", finalURL);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        break;
+                    }
+                    case "20": {
+                        String finalURL = service.webviewUrl + "email=" + sessionUser.userInfo.email + "&password=" + sessionUser.userInfo.id;
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", finalURL);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        break;
+                    }
+                    case "21":{
+                        String finalURL = service.webviewUrl + "" + sessionUser.userInfo.language + "/home?uid=" + sessionUser.userInfo.id;
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", finalURL);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        //https://ticketplus-dev.streamnow.ch/de/home?uid=1047
+                        break;
+                    }
+                    case "22":{
+                        String finalURL = service.webviewUrl + "" + sessionUser.userInfo.language + "/home?uid=" + sessionUser.userInfo.id;
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", finalURL);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
                         break;
                     }
                 }

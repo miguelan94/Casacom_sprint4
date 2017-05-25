@@ -48,4 +48,17 @@
     <string name="switch_loggued">Angemeldet bleiben</string>
     <string name="call">Anruf</string>
     <string name="call_abort">Abbrechen</string>
+    <string name="shopping_error">Es war nicht möglich, Ihren neuen Service zu aktivieren. Bitte versuchen Sie es später.</string>
+    <string name="shopping_confirm">Sind Sie sicher um diesen Service zu kaufen?</string>
+    <string name="buy">kaufen</string>
+    <string name="service_not_activated">Dienst nicht aktiviert</string>
+    <string name="service_activated">Dienst aktiviert</string>
+    <string name="terms">Allgemeine Geschfätsbedingungen</string>
+    <string name="termsNotAccepted">Sie haben die AGB nicht akzeptiert, so dass Sie sich nicht anmelden können.</string>
+    <string name="login_failure">Es gibt ein Problem mit dem Service. Bitte kontaktieren Sie uns.</string>
+    <string name="contactMessage">Geben Sie eine Nachricht ein</string>
+    <string name="emptyEmail_contact">Nicht definierte E-Mail</string>
+    <string name="emptyUrl_contact">Nicht definierte URL</string>
+    <string name="emptyPhone_contact">Nicht definierte Nummer</string>
+    <string name="emptyAddress_contact">Nicht definierte Adresse</string>
 </resources>

@@ -116,8 +116,6 @@ public class MainActivity extends BaseActivity{
                     System.out.println("onFailure json");
                 }
             });
-
-
     }
 
     private void checkTime(){

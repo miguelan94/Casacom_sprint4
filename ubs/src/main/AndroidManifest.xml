@@ -35,9 +35,8 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name=".activities.ContactActivity"
-            android:label="@string/title_activity_contact"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".activities.ScreenSlidePageFragment"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.DocmanMenuActivity"
             android:label="@string/title_activity_docman_menu"

@@ -166,6 +166,7 @@ public class DocmanMenuActivity extends BaseActivity
             }
 
             String docUrl = "http://docs.google.com/gview?embedded=true&url=" + encodedURL;
+            intent.putExtra("type","document");
             intent.putExtra("web_url", docUrl);
             startActivity(intent);
         }

@@ -21,7 +21,7 @@
     <string name="support">Aider</string>
     <string name="general_docs">Documents généraux</string>
     <string name="personal_docs">Documents personnels</string>
-    <string name="no_docs_available">Pas de documents disponibles</string>
+    <string name="no_docs_available">Aucun document disponible</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="profile">Profil</string>
     <string name="contacts">Contacts</string>
@@ -46,4 +46,13 @@
     <string name="no_entertainment_avaliable">Cette fonctionnalité ne fonctionne pas avec Android 5.x</string>
     <string name="select_BP">Sélectionner</string>
     <string name="switch_loggued">Restez connecté</string>
+    <string name="terms">Termes et Conditions</string>
+    <string name="contactMessage">Saisissez un message</string>
+    <string name="emptyEmail_contact">Courriel non défini</string>
+    <string name="emptyUrl_contact">URL non définie</string>
+    <string name="emptyPhone_contact">Nombre non défini</string>
+    <string name="emptyAddress_contact">Adresse non définie</string>
+    <string name="termsNotAccepted">Vous n\'avez pas accepté les terms et conditions, vous ne pouvez donc pas vous connecter.</string>
+
+
 </resources>

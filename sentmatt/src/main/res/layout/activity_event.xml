@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:theme="@style/AppTheme"
-    tools:context="com.streamnow.sentmattmobile.activities.EventActivity"
+    tools:context="com.streamnow.sentmatt.activities.EventActivity"
     android:id="@+id/view_bgnd_event">
     <include layout="@layout/content_event" />
 

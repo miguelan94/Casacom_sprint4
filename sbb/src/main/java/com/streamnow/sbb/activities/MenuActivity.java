@@ -283,18 +283,8 @@ public class MenuActivity extends BaseActivity
                     break;
                 }
                 case "1":{
-                        /*if (service.id.equals("22")) {//events
-                            Intent i = new Intent(this, EventActivity.class);
-                            startActivity(i);
-                        } else if (service.id.equals("53") || service.id.equals("20")) {
-                            Intent intent = new Intent(this, ContactActivity.class);
-                            intent.putExtra("api_url", service.apiUrl);
-                            startActivity(intent);
-                        } else if (service.id.equals("3")) {
-                            Intent intent = new Intent(this, DocmanMenuActivity.class);
-                            intent.putExtra("root_menu", true);
-                            intent.putExtras(new Bundle());
-                            startActivity(intent);
+                        /*
+
                         }*/
                     break;
                 }
@@ -314,7 +304,7 @@ public class MenuActivity extends BaseActivity
                     break;
                 }
                 case "9": {
-                    Intent intent = new Intent(this, ContactActivity.class);
+                    Intent intent = new Intent(this, ScreenSlidePageFragment.class);
                     intent.putExtra("name_service",service.name);
                     intent.putExtra("api_url", service.apiUrl);
                     startActivity(intent);
@@ -416,15 +406,7 @@ public class MenuActivity extends BaseActivity
                 System.out.println("type: " + service.type);
                 switch (service.type) {
                     case "1":
-                            /*if (service.id.equals("53") || service.id.equals("20")) {
-                                Intent intent = new Intent(this, ContactActivity.class);
-                                intent.putExtra("api_url", service.apiUrl);
-                                startActivity(intent);
-                            } else {
-                                Intent intent = new Intent(this, DocmanMenuActivity.class);
-                                intent.putExtra("root_menu", true);
-                                intent.putExtras(new Bundle());
-                                startActivity(intent);
+                            /*
                             }*/
                         break;
                     case "2": {

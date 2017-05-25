@@ -16,9 +16,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.customtabs.CustomTabsClient;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.customtabs.CustomTabsServiceConnection;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.util.TypedValue;
@@ -42,15 +39,20 @@ import com.streamnow.europaallee.interfaces.IMenuPrintable;
 import com.streamnow.europaallee.lib.LDConnection;
 import com.streamnow.europaallee.utils.Lindau;
 import com.streamnow.europaallee.utils.MenuAdapter;
+import com.streamnow.europaallee.activities.ContactFragment;
 
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.client.HttpClient;
@@ -61,7 +63,7 @@ public class MenuActivity extends BaseActivity
 {
     protected final LDSessionUser sessionUser = Lindau.getInstance().getCurrentSessionUser();
     String categoryId;
-    CustomTabsClient mCustomTabsClient;
+
 
 
     @Override
@@ -76,17 +78,9 @@ public class MenuActivity extends BaseActivity
 
         setContentView(R.layout.activity_main_menu);
 
-        Intent i = new Intent(this, RegistrationIntentService.class);
-        startService(i);
 
 
-        PersistentCookieStore myCookieStore = new PersistentCookieStore(this);
-        List<Cookie> cookies = myCookieStore.getCookies();
-        for (int c = 0; c < cookies.size(); c++) {
-            System.out.println("COOKIES---" + cookies.get(c).getName() + " value" + cookies.get(c).getValue() );
-        }
-
-
+        
         categoryId = this.getIntent().getStringExtra("category_id");
         String categoryName = getIntent().getStringExtra("category_name");
         ArrayList<? extends IMenuPrintable> adapterArray;
@@ -142,10 +136,6 @@ public class MenuActivity extends BaseActivity
         else{
             textView.setText(sessionUser.userInfo.partner.smartphoneAppName);
         }
-
-
-
-
         RelativeLayout bgnd_image = (RelativeLayout)findViewById(R.id.bgnd_image);
         ImageView smart_image = (ImageView)findViewById(R.id.smartphone_image);
         ImageView left_arrow = (ImageView)findViewById(R.id.left_arrow);
@@ -160,13 +150,13 @@ public class MenuActivity extends BaseActivity
         ImageView imageView = (ImageView)findViewById(R.id.settings_ico); //settings
         if(!getIntent().getBooleanExtra("sub_menu",false)){
             //smart_image.setImageResource(sessionUser.userInfo.partner.backgroundSmartphoneImage);
+            textView.setVisibility(View.VISIBLE);
             categoryName_text.setVisibility(View.GONE);
             System.out.println("Image: " + sessionUser.userInfo.partner.backgroundSmartphoneImage);
             dividerTop.setVisibility(View.GONE);
             Picasso.with(this)
                     .load(sessionUser.userInfo.partner.backgroundSmartphoneImage)
                     .into(smart_image);
-
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -347,7 +337,7 @@ public class MenuActivity extends BaseActivity
                     break;
                 }
                 case "9": {
-                    Intent intent = new Intent(this, ContactActivity.class);
+                    Intent intent = new Intent(this, ContactFragment.class);
                     intent.putExtra("name_service", service.name);
                     intent.putExtra("api_url", service.apiUrl);
                     startActivity(intent);
@@ -421,8 +411,136 @@ public class MenuActivity extends BaseActivity
                             System.out.println("get token KO: " + throwable.toString() + " status code = " + statusCode + " responseString = " + response);
                         }
                     });
+                    break;
+                }
+                case "13":{
+                    RequestParams params = new RequestParams();
+                    System.out.println("service api " + service.apiUrl);
+                    params.add("access_token",sessionUser.accessToken);
+                    LDConnection.get("energylite/getLink",params,new JsonHttpResponseHandler(){
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            String url = null;
+
+                            try {
+                                System.out.println("OK--> " + response.toString());
+                                if(response.getString("status").equalsIgnoreCase("ok")){
+                                    url = response.getString("url");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            if(url!=null && !url.equals("")){
+
+                                Intent intent = new Intent(MenuActivity.this,WebViewActivity.class);
+                                intent.putExtra("web_url",url);
+                                intent.putExtra("service_name",service.name);
+                                startActivity(intent);
+
+
+                                  /*  System.out.println("URL: " + url);
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.setPackage("com.android.chrome");
+                                    try {
+                                        startActivity(intent);
+                                    } catch (ActivityNotFoundException e) {
+                                        // Chrome is probably not installed
+                                        intent.setPackage(null);
+                                        startActivity(intent);
+                                    }
+                                  */
+
+
+
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                            System.out.println("onFailure json" + errorResponse.toString());
+                        }
+
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
+                            System.out.println("onFailure json: " + throwable.toString() + " status code = " + statusCode + " responseString = " + response);
+                        }
+                    });
+                    break;
+                }
+                case "15" :{
+                    String email = sessionUser.userInfo.email;
+                    String pass = sessionUser.userInfo.id;
+                    String finalURL = service.webviewUrl + "email=" + email + "&password=" + pass;
+                    System.out.println("finalurl----> " + finalURL);
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", finalURL);
+                    intent.putExtra("service_name",service.name);
+                    startActivity(intent);
+                    break;
                 }
 
+                case "16" :{
+                    String finalURL = service.webviewUrl + "uid=" + sessionUser.userInfo.id;
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", finalURL);
+                    intent.putExtra("service_name",service.name);
+                    startActivity(intent);
+                    break;
+                }
+                case "17": {
+                    String finalURL = service.webviewUrl + "user=" + sessionUser.userInfo.email + "&password=" +sessionUser.userInfo.id;
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", finalURL);
+                    intent.putExtra("service_name",service.name);
+                    startActivity(intent);
+                    break;
+                }
+                case "18": {
+                    String finalURL = service.webviewUrl + "user=" + sessionUser.userInfo.id + "&password=" + sessionUser.userInfo.id;
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", finalURL);
+                    intent.putExtra("service_name",service.name);
+                    startActivity(intent);
+                    break;
+                }
+                case "19": {
+                    String finalURL = service.webviewUrl + "uid=" + sessionUser.userInfo.id;
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", finalURL);
+                    intent.putExtra("service_name",service.name);
+                    startActivity(intent);
+                    break;
+                }
+                case "20": {
+                    String finalURL = service.webviewUrl + "email=" + sessionUser.userInfo.email + "&password=" + sessionUser.userInfo.id;
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", finalURL);
+                    intent.putExtra("service_name",service.name);
+                    startActivity(intent);
+                    break;
+                }
+
+                case "21":{
+                    String finalURL = service.webviewUrl + "" + sessionUser.userInfo.language + "/home?uid=" + sessionUser.userInfo.id;
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", finalURL);
+                    intent.putExtra("service_name",service.name);
+                    startActivity(intent);
+                    //https://ticketplus-dev.streamnow.ch/de/home?uid=1047
+                    break;
+                }
+                case "22":{
+                    String finalURL = service.webviewUrl + "" + sessionUser.userInfo.language + "/home?uid=" + sessionUser.userInfo.id;
+                    Intent intent = new Intent(this, WebViewActivity.class);
+                    intent.putExtra("web_url", finalURL);
+                    intent.putExtra("service_name",service.name);
+                    startActivity(intent);
+                    break;
+                }
 
             }
 
@@ -561,7 +679,7 @@ public class MenuActivity extends BaseActivity
             if (services.size() == 1)
             {
 
-                LDService service = (LDService) services.get(0);
+                final LDService service = (LDService) services.get(0);
                     //check service type
 
                 switch (service.type) {
@@ -607,7 +725,7 @@ public class MenuActivity extends BaseActivity
                         break;
                     }
                     case  "9": {
-                        Intent intent = new Intent(this, ContactActivity.class);
+                        Intent intent = new Intent(this, ContactFragment.class);
                         intent.putExtra("name_service",service.name);
                         intent.putExtra("api_url", service.apiUrl);
                         startActivity(intent);
@@ -625,6 +743,133 @@ public class MenuActivity extends BaseActivity
                         Intent i = new Intent(this, EventActivity.class);
                         i.putExtra("name_service",service.name);
                         startActivity(i);
+                        break;
+                    }
+                    case "13":{
+                        RequestParams params = new RequestParams();
+                        System.out.println("service api " + service.apiUrl);
+                        params.add("access_token",sessionUser.accessToken);
+                        LDConnection.get("energylite/getLink",params,new JsonHttpResponseHandler(){
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                String url = null;
+
+                                try {
+                                    System.out.println("OK--> " + response.toString());
+                                    if(response.getString("status").equalsIgnoreCase("ok")){
+                                        url = response.getString("url");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                if(url!=null && !url.equals("")){
+
+                                    Intent intent = new Intent(MenuActivity.this,WebViewActivity.class);
+                                    intent.putExtra("web_url",url);
+                                    intent.putExtra("service_name",service.name);
+                                    startActivity(intent);
+
+
+                                  /*  System.out.println("URL: " + url);
+                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.setPackage("com.android.chrome");
+                                    try {
+                                        startActivity(intent);
+                                    } catch (ActivityNotFoundException e) {
+                                        // Chrome is probably not installed
+                                        intent.setPackage(null);
+                                        startActivity(intent);
+                                    }
+                                  */
+
+
+
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                                System.out.println("onFailure json" + errorResponse.toString());
+                            }
+
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
+                                System.out.println("onFailure json: " + throwable.toString() + " status code = " + statusCode + " responseString = " + response);
+                            }
+                        });
+                        break;
+                    }
+                    case "15" :{
+                        String email = sessionUser.userInfo.email;
+                        String pass = sessionUser.userInfo.id;
+                        String finalURL = service.webviewUrl + "email=" + email + "&password=" + pass;
+                        System.out.println("finalurl----> " + finalURL);
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", finalURL);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        break;
+                    }
+
+                    case "16" :{
+                        String finalURL = service.webviewUrl + "uid=" + sessionUser.userInfo.id;
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", finalURL);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        break;
+                    }
+                    case "17": {
+                        String finalURL = service.webviewUrl + "user=" + sessionUser.userInfo.email + "&password=" +sessionUser.userInfo.id;
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", finalURL);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        break;
+                    }
+                    case "18": {
+                        String finalURL = service.webviewUrl + "user=" + sessionUser.userInfo.id + "&password=" + sessionUser.userInfo.id;
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", finalURL);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        break;
+                    }
+                    case "19": {
+                        String finalURL = service.webviewUrl + "uid=" + sessionUser.userInfo.id;
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", finalURL);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        break;
+                    }
+                    case "20": {
+                        String finalURL = service.webviewUrl + "email=" + sessionUser.userInfo.email + "&password=" + sessionUser.userInfo.id;
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", finalURL);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        break;
+                    }
+                    case "21":{
+                        String finalURL = service.webviewUrl + "" + sessionUser.userInfo.language + "/home?uid=" + sessionUser.userInfo.id;
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", finalURL);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
+                        //https://ticketplus-dev.streamnow.ch/de/home?uid=1047
+                        break;
+                    }
+                    case "22":{
+                        String finalURL = service.webviewUrl + "" + sessionUser.userInfo.language + "/home?uid=" + sessionUser.userInfo.id;
+                        Intent intent = new Intent(this, WebViewActivity.class);
+                        intent.putExtra("web_url", finalURL);
+                        intent.putExtra("service_name",service.name);
+                        startActivity(intent);
                         break;
                     }
                 }
@@ -692,9 +937,11 @@ public class MenuActivity extends BaseActivity
                             public void onSuccess(int statusCode, Header[] headers, JSONObject response)
                             {
                                 try{
-                                    if(response.getJSONObject("status").getString("status").equals("ok")){
-                                        intent.putExtra("user_vodka",response.getJSONObject("status").getJSONObject("credentials").getString("username"));
-                                        intent.putExtra("pass_vodka",response.getJSONObject("status").getJSONObject("credentials").getString("password"));
+                                    System.out.println("response: " + response.toString());
+                                    System.out.println("response status: " + response.getString("status"));
+                                    if(response.getString("status").equals("ok")){
+                                        intent.putExtra("user_vodka",response.getJSONObject("credentials").getString("username"));
+                                        intent.putExtra("pass_vodka",response.getJSONObject("credentials").getString("password"));
                                     }
                                     else{
                                     }
@@ -750,4 +997,5 @@ public class MenuActivity extends BaseActivity
         finish();
 
     }
+
 }

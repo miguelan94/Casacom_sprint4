@@ -1,5 +1,6 @@
 package com.streamnow.ubs.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.text.Html;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -67,10 +69,11 @@ public class SettingsActivity extends BaseActivity {
         textVersion.setText(getString(R.string.app_name) + " " + pInfo.versionName + " - " + getString(R.string.versionDate));
         if (getIntent().getBooleanExtra("main_menu", true)) {
             this.items = new ArrayList<>();
-            String[] list = {getResources().getString(R.string.profile), getResources().getString(R.string.contacts), getResources().getString(R.string.logout), getResources().getString(R.string.shopping)};
+            String[] list = {getResources().getString(R.string.profile), getResources().getString(R.string.contacts), getResources().getString(R.string.logout), getResources().getString(R.string.shopping),getString(R.string.terms)};
             //items.addAll(Arrays.asList(list)); //all
             items.add(0, list[0]);
             items.add(1, list[2]);
+            items.add(2, list[4]);
         }
         View dividerTop = findViewById(R.id.divider);
         View dividerBottom = findViewById(R.id.dividerBottom);
@@ -153,13 +156,83 @@ public class SettingsActivity extends BaseActivity {
                 }
             });
 
-        } else if (position == 2) {//contacts
+        } else if (position == 2) {
 
+
+            RequestParams requestParams = new RequestParams();
+            requestParams.add("access_token", sessionUser.accessToken);
+            requestParams.add("BP_ID",sessionUser.userInfo.partner.id);
+            requestParams.add("language",sessionUser.userInfo.language);
+            LDConnection.get("getBPTerms", requestParams, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+                        if (statusCode==200){
+                           String data = null;
+                            try {
+                                data = response.getString("msg");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            Intent intent = new Intent(SettingsActivity.this,WebViewActivity.class);
+                            intent.putExtra("type","getTerms");
+                            intent.putExtra("service_name",getString(R.string.terms));
+                            intent.putExtra("web_url", data);
+                            startActivity(intent);
+
+
+                        }
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String response, Throwable throwable) {
+                    System.out.println(" onFailure throwable: " + throwable.toString() + " status code = " + statusCode);
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    System.out.println(" onFailure json");
+
+                }
+            });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+            Intent intent = new Intent(this,WebViewActivity.class);
+            intent.putExtra("")
+            startActivity(intent);*/
+
+        } else if (position == 3) {//shopping
+
+        }
+        else if (position == 4){//contacts
             Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
             intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
             startActivityForResult(intent, PICK_CONTACT_REQUEST);
-        } else if (position == 3) {//shopping
-
         }
     }
 

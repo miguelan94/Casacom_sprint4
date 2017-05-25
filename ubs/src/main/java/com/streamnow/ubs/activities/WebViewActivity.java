@@ -55,9 +55,11 @@ public class WebViewActivity extends BaseActivity {
         String webUrlString = getIntent().getStringExtra("web_url");
         String serviceId = getIntent().getStringExtra("service_id");
         String serviceName = getIntent().getStringExtra("service_name");
+        String serviceType = getIntent().getStringExtra("type");
+        System.out.println("web_URL " + webUrlString);
 
         if (webUrlString == null) {
-            //finish();
+            finish();
         }
 
         LinearLayout bgnd = (LinearLayout) findViewById(R.id.bar_bgnd);
@@ -149,7 +151,14 @@ public class WebViewActivity extends BaseActivity {
             webView.loadUrl(webUrlString + "token=" + token);
 
 
-        } else {
+        }
+        else if(serviceType!=null && serviceType.equalsIgnoreCase("getTerms")){
+            System.out.println("getTerms");
+            this.webView.getSettings().setTextSize(WebSettings.TextSize.LARGEST);
+            webView.loadData(webUrlString,"text/html; charset=utf-8", "UTF-8");
+        }
+        else {
+
             webView.loadUrl(webUrlString);
         }
 

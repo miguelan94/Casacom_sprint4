@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:padding="0dp"
-    tools:context="com.streamnow.sentmattmobile.activities.WebViewActivity"
+    tools:context="com.streamnow.sentmatt.activities.WebViewActivity"
     android:id="@+id/view_bgnd">
 
     <include layout="@layout/content_web_view" />

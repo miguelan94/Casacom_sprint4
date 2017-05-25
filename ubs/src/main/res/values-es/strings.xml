@@ -21,7 +21,7 @@
     <string name="support">Soporte</string>
     <string name="general_docs">Documentos generales</string>
     <string name="personal_docs">Documentos personales</string>
-    <string name="no_docs_available">No existen documentos disponibles</string>
+    <string name="no_docs_available">No hay documentos disponibles</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="profile">Perfil</string>
     <string name="contacts">Contactos</string>
@@ -49,4 +49,11 @@
     <string name="call">Llamar</string>
     <string name="call_abort">Cancelar</string>
     <string name="login_failure">Hay un problema con el servicio. Por favor, contáctenos</string>
+    <string name="terms">Términos y condiciones</string>
+    <string name="contactMessage">Escriba un mensaje</string>
+    <string name="emptyEmail_contact">Correo electrónico no definido</string>
+    <string name="emptyUrl_contact">URL no definida</string>
+    <string name="emptyPhone_contact">Número no definido</string>
+    <string name="emptyAddress_contact">Dirección no definida</string>
+    <string name="termsNotAccepted">No has aceptado los términos y condiciones, por lo que no puedes iniciar sesión.</string>
 </resources>
